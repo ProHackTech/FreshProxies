@@ -15,6 +15,12 @@ Developed by: Bhavesh Kaul | ProHack.Tech
 
 Show some love and star on GitHub.
 
+_____
+TO-DO
+-----
++ allow users to decide number of proxies to download
++ add support from other website
+
 '''
 
 # store proxy types
