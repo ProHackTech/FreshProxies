@@ -1,4 +1,4 @@
-import argparse, os
+import argparse, os, threading
 from time import sleep
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -52,6 +52,10 @@ def save_list(output):
 
 # download function - important boi
 def download_proxy(url, output):
+
+	# clean lists for 'ALL' option
+	proxy_ips.clear()
+	proxy_ports.clear()
 	
 	# initialize web driver
 	options = Options()
@@ -88,6 +92,12 @@ def download_proxy(url, output):
 	# save file function
 	save_list(output)
 
+# multithreading for "ALL" option
+def thread_run(url, output):
+	thread = threading.Thread(target=download_proxy, args=(url, output))
+	thread.start()
+	thread.join()
+
 # function to manage selections
 # made it to seperate selections from download function
 # i find it cleaner this way
@@ -101,7 +111,7 @@ def selection_manager(pType, output):
 	if pType == "all": # if proxy type selection is 'ALL'
 		for x in range(0, len(proxy_types)): # if 'x' is in range from index 0 to length of proxy_types list
 			url = f"{url}{proxy_types[x]}" # generate url string to pass in download function
-			download_proxy(url, default_output_names[x]) # run download function for each loop with default names
+			thread_run(url, default_output_names[x]) # run download function for each loop with default names
 	else: # if proxy type is anything other than 'ALL'
 		url = f"{url}{pType.upper()}"
 		download_proxy(url, output)
@@ -109,14 +119,9 @@ def selection_manager(pType, output):
 
 parser = argparse.ArgumentParser(description="Get Fresh Proxies")
 parser.add_argument("-t", "--type", help="Enter Proxy Type [HTTP/HTTPS/SOCKS4/SOCKS5/ALL]", type=str)
-parser.add_argument("-n", "-number", help="Enter the number of proxies you want [DEFAULT: 10]", type=int)
 parser.add_argument("-o", "--output", help="Enter Filename [EX: proxies.txt]", type=str)
 args = parser.parse_args()
 
-if args.number:
-	number_proxy_limit = args.number
-else:
-	number_proxy_limit = 10
 if args.type:
 	if args.output:
 		selection_manager(args.type, args.output)
