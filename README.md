@@ -15,7 +15,9 @@ You need the following python packages installed:
 
 - selenium
 
-You will need Firefox installed on the system
+- httplib2
+
+You will need Firefox installed on the system. Gecko driver executable file is provieded for Windows users. Linux users can enjoy without any executables, as long as Firefox is installed.
 
 ## Features
 
@@ -82,7 +84,7 @@ Uses default proxy list with name "proxies.txt" and timesec "9999"
 
 > python fp.py -pb -f your_proxy_list.txt
 
-### Proxify using custom list and timesec (for quick automation for stuff like view bots)
+### Proxify using custom list and timesec (quick automation)
 
 > python fp.py -pb -f proxies.txt -ts 120
 
