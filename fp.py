@@ -1,16 +1,38 @@
-import argparse, os, threading
+import argparse, os, threading, httplib2
 from time import sleep
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.common.proxy import Proxy, ProxyType
 from core.colors import c_white, c_green, c_red, c_yellow, c_blue
 
 '''
 _____
 TO-DO
 -----
-+ allow users to decide number of proxies to download
-+ add support from other proxy lists
++ allow to automatically use proxy browser after grabbing proxy list
+
++ allow to open specific number of proxy browsers instead of whole list
+
++ allow proxy grab from other websites
+
++ allow grabbing specific number of proxies instead of default 26
+
++ auto check and remove bad proxies
+
++ migrate to bs4 page search instead of webdriver search
+
+Features will not be developed in order, so keep checking for new versions.
+
+________________________
+NOTE ON WEBDRIVER ERRORS
+------------------------
+
+- When using proxy browser, you may encounter many webdriver errors. IGNORE THEM.
+
+- These errors occur if a proxy is not working properly. Remove that proxy from the list.
+
+- Feature to check proxies automatically will be made in the future.
 
 '''
 
@@ -127,14 +149,92 @@ def selection_manager(pType, output):
 		url = f"{url}{pType.upper()}"
 		download_proxy(url, output, pType)
 
+def proxify_start(proxy, timesec):
+	# apply proxy to firefox
+	PROX = proxy
+	webdriver.DesiredCapabilities.FIREFOX['proxy']={
+		"httpProxy":PROX,
+		"ftpProxy":PROX,
+		"sslProxy":PROX,
+		"proxyType":"MANUAL"
+	}
+
+	# start webdriver
+	driver = webdriver.Firefox()
+	driver.get("https://www.whatismyip.com/") # default URL to make sure you're proxied
+
+	# keeping the browser window open
+	if timesec != 0000:
+		sleep(timesec)
+	else:
+		sleep(9999)
+
+	# quit the driver
+	driver.quit()
+
+# session for each proxy in proxy file list
+def proxify_session(filename, timesec):
+	# read proxy list
+	proxies = [line.rstrip('\n') for line in open(filename)]
+
+	# creating thread list for starting browser thread
+	rippers = [threading.Thread(target=proxify_start, args=(proxy,timesec)) for proxy in proxies]
+
+	# starting the threads
+	for ripper in rippers:
+		ripper.start()
+	# join the threads to pool
+	for ripper in rippers:
+		ripper.join()
+
+def git_version():
+	hreq = httplib2.Http()
+	response_header,content=hreq.request("https://raw.githubusercontent.com/ProHackTech/pytubedown/master/version.me","GET")
+	content = content.decode()
+	content = int(content)
+	return content
+
+def my_version():
+	version_me = 1
+	# read current version
+	with open("VERSION.txt", "r") as fversion:
+		for line in fversion:
+			version_me = line
+	version_me = int(version_me)
+	return version_me
+
+def update_check():
+	version_me, content = my_version(), git_version()
+	# compare versions
+	if version_me < content:
+		print(f"{c_green}[New Version Available]{c_yellow}There is a new version available!{c_white}\nRun {c_blue}updater.py{c_white} for updating!")
+	else:
+		print(f"{c_green}[Running Latest]{c_white}")
 
 parser = argparse.ArgumentParser(description="Get Fresh Proxies")
 parser.add_argument("-t", "--type", help="Enter Proxy Type [HTTP/HTTPS/SOCKS4/SOCKS5/ALL]", type=str)
-parser.add_argument("-o", "--output", help="Enter Filename [EX: proxies.txt]", type=str)
+parser.add_argument("-f", "--filename", help="Enter Filename [EX: proxies.txt]", type=str)
+parser.add_argument("-ts", "--timesec", help="Specify time delay in seconds", type=int)
+parser.add_argument("-pb", "--proxybrowser", help="Opens clean browser for proxy list", action="store_true")
+parser.add_argument("-upd", "--update", help="Update FreshProxy", action="store_true")
+
 args = parser.parse_args()
 
-if args.type:
-	if args.output:
-		selection_manager(args.type, args.output)
+if args.type: # grabbing proxies
+	if args.filename:
+		selection_manager(args.type, args.filename)
 	else:
 		selection_manager(args.type, "proxies.txt")
+elif args.proxybrowser: # proxy browser
+	if args.filename:
+		if args.timesec:
+			proxify_session(filename, args.timesec)
+		else:
+			proxify_session(filename, 0000)
+	else:
+		if args.timesec:
+			proxify_session("proxies.txt", args.timesec)
+		else:
+			proxify_session("proxies.txt", 0000)
+elif args.update:
+	update_check()
