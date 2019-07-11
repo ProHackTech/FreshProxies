@@ -1,4 +1,9 @@
-# FastProxy
+<h1 align="center">
+	<br>
+	<img src="https://raw.githubusercontent.com/ProHackTech/FreshProxies/master/git_assets/logo.png" alt="FreshProxy Logo">
+	<br>
+	FreshProxy
+</h1>
 
 Python script to grab HTTP, HTTPS, SOCKS4 and SOCKS5 proxies fast.
 
@@ -38,6 +43,6 @@ You will need Firefox installed on the system
 
 ## Planned features
 
-[] Allow users to enter the number of proxies to download
+[-] Allow users to enter the number of proxies to download
 
-[] Add support for other proxy websites
+[-] Add support for other proxy websites
