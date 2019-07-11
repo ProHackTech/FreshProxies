@@ -22,6 +22,8 @@ TO-DO
 
 + migrate to bs4 page search instead of webdriver search
 
++ auto update check on start (but not run updater)
+
 Features will not be developed in order, so keep checking for new versions.
 
 ________________________
@@ -207,7 +209,7 @@ def update_check():
 	version_me, content = my_version(), git_version()
 	# compare versions
 	if version_me < content:
-		print(f"{c_green}[New Version Available]{c_yellow}There is a new version available!{c_white}\nRun {c_blue}updater.py{c_white} for updating!")
+		print(f"{c_green}[New Version Available]{c_yellow}There is a new version available!{c_white}\nRun {c_blue}/updater/update.py{c_white} for updating!")
 	else:
 		print(f"{c_green}[Running Latest]{c_white}")
 
