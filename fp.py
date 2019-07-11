@@ -3,23 +3,14 @@ from time import sleep
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.firefox.options import Options
+from core.colors import c_white, c_green, c_red, c_yellow, c_blue
 
 '''
-
-Developed by: Bhavesh Kaul | ProHack.Tech
-@ 2019
-
--- What is this? --
-[+] Small script to download fresh proxy lists with {ip:port} format.
-[+] Get HTTP, HTTPS, SOCKS4, SOCKS5 proxies, or all.
-
-Show some love and star on GitHub.
-
 _____
 TO-DO
 -----
 + allow users to decide number of proxies to download
-+ add support from other website
++ add support from other proxy lists
 
 '''
 
@@ -42,6 +33,7 @@ def save_list(output):
 	os.remove(output) if os.path.isfile(output) else None
 
 	# open file handler
+	print(f"{c_green}[saving list]{c_white}")
 	with open(output, 'a') as f:
 		# for x in range 0 to length of list of ip's
 		for x in range(0, len(proxy_ips)):
@@ -50,8 +42,8 @@ def save_list(output):
 			# write to file
 			f.write(temp_str)
 
-# download function - important boi
-def download_proxy(url, output):
+# download function
+def download_proxy(url, output, pType):
 
 	# clean lists for 'ALL' option
 	proxy_ips.clear()
@@ -72,19 +64,23 @@ def download_proxy(url, output):
 
 	# get information
 	for x in range(1, len(numTR)):
-		temp_xpath_ip = f"/html/body/div/main/div/div[3]/div/table/tbody/tr[{x}]/td[1]"
-		temp_xpath_port = f"/html/body/div/main/div/div[3]/div/table/tbody/tr[{x}]/td[2]"
+		# if http proxy, then 2nd last div is 3, else 2
+		if pType == "http":
+			temp_xpath_ip = f"/html/body/div/main/div/div[3]/div/table/tbody/tr[{x}]/td[1]"
+			temp_xpath_port = f"/html/body/div/main/div/div[3]/div/table/tbody/tr[{x}]/td[2]"
+		else:
+			temp_xpath_ip = f"/html/body/div/main/div/div[2]/div/table/tbody/tr[{x}]/td[1]"
+			temp_xpath_port = f"/html/body/div/main/div/div[2]/div/table/tbody/tr[{x}]/td[2]"
+		# get the elements
 		try:
 			tempDataElem_ip = driver.find_element_by_xpath(temp_xpath_ip).text
 			tempDataElem_port = driver.find_element_by_xpath(temp_xpath_port).text
 			proxy_ips.append(tempDataElem_ip)
 			proxy_ports.append(tempDataElem_port)
-			print(f"Gathered IP:PORT >> {tempDataElem_ip}:{tempDataElem_port}")
-			# remove this comment if there is ElementNotFound errors
-			# but this will make it 200% slower to gather ip's -\(+_+)/-
+			print(f"{c_green}[Gathered] >> {c_blue}{tempDataElem_ip}{c_yellow}:{c_blue}{tempDataElem_port}{c_white}")
 			# sleep(1) # seconds
 		except Exception as e:
-			pass
+			print(f"{c_red} -- EXCEPTION -- \n\n{e}{c_white}")
 
 	# quit driver
 	driver.quit()
@@ -92,15 +88,16 @@ def download_proxy(url, output):
 	# save file function
 	save_list(output)
 
+# store threads list
+rippers = []
+
 # multithreading for "ALL" option
-def thread_run(url, output):
-	thread = threading.Thread(target=download_proxy, args=(url, output))
-	thread.start()
-	thread.join()
+def threader(url, output, pType):
+	thread = threading.Thread(target=download_proxy, args=(url, output, pType))
+	rippers.append(thread)
+	print(f"{c_green}[Formed Thread] >> {c_yellow}{pType}{c_white}")
 
 # function to manage selections
-# made it to seperate selections from download function
-# i find it cleaner this way
 def selection_manager(pType, output):
 	# define constant url
 	url = "https://www.proxy-list.download/"
@@ -109,12 +106,26 @@ def selection_manager(pType, output):
 	pType = pType.lower()
 
 	if pType == "all": # if proxy type selection is 'ALL'
+		#print(f"Fixing multithreading bug for [ALL] option. Please use seperate options or now :/")
+		
 		for x in range(0, len(proxy_types)): # if 'x' is in range from index 0 to length of proxy_types list
+			print(f"{c_green}[Proxy Type] {c_yellow}>>{c_yellow} {c_blue}{proxy_types[x]}{c_white}")
+			url = "https://www.proxy-list.download/" # clean the url, or else it appends for each loop
 			url = f"{url}{proxy_types[x]}" # generate url string to pass in download function
-			thread_run(url, default_output_names[x]) # run download function for each loop with default names
+			print(f"{c_green}[URL] {c_yellow}>>{c_yellow} {c_white}{url}")
+			threader(url, default_output_names[x], pType) # run download function for each loop with default names
+		for ripper in rippers:
+			print(f"{c_green}[Starting Thread] >> {c_yellow}{ripper}{c_white}")
+			ripper.start()
+			print(f"{c_green}[Joining Thread] >> {c_yellow}{ripper}{c_white}")
+			ripper.join()
+		#for ripper in rippers:
+		#	print(f"{c_green}[Joining Thread] >> {c_yellow}{ripper}{c_white}")
+		#	ripper.join()
+		
 	else: # if proxy type is anything other than 'ALL'
 		url = f"{url}{pType.upper()}"
-		download_proxy(url, output)
+		download_proxy(url, output, pType)
 
 
 parser = argparse.ArgumentParser(description="Get Fresh Proxies")
