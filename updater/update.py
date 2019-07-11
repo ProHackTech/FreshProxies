@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import ( division, absolute_import, print_function, unicode_literals )
 
-import sys, os, tempfile, logging, zipfile
+import sys, os, tempfile, logging, zipfile, shutil, re
+from distutils.dir_util import copy_tree
 
 if sys.version_info >= (3,):
     import urllib.request as urllib2
@@ -11,9 +12,36 @@ else:
     import urllib2
     import urlparse
 
-def extract_compressed():
+def perform_update():
+
+    file_list, files_to_remove = [], []
+
+    # extract archive
+    print("Extracting archive")
     with zipfile.ZipFile("master.zip","r") as zr:
         zr.extractall("")
+    # remove 'updater' folder from extracted
+    print("Removing 'updater' folder")
+    shutil.rmtree('FreshProxies-master/updater', ignore_errors=True)
+    # remove all items in old dir
+    for root, dirs, files in os.walk(os.path.abspath("../")):
+        for file in files:
+            temppath = f"{os.path.join(root, file)}"
+            file_list.append(temppath)
+    # discover files to remove
+    for filepath in file_list:
+        if filepath.find("updater") == -1: # removed instances of items with "updater"
+            if filepath.find(".git") == -1:
+                files_to_remove.append(filepath)
+    # delete old files
+    for filepath in files_to_remove:
+        try:
+            os.remove(filepath)
+        except Exception as e:
+            raise e
+    # copy extracted dir contents to old dir
+    copy_tree("FreshProxies-master", "../")
+    print("Update Complete!")
 
 def download_file(url, dest=None):
     """ 
@@ -61,4 +89,4 @@ if __name__ == "__main__":  # Only run if this file is called directly
     url = "https://github.com/ProHackTech/FreshProxies/archive/master.zip"
     filename = download_file(url)
     print(filename)
-    extract_compressed()
+    perform_update()
