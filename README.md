@@ -15,8 +15,6 @@ You need the following python packages installed:
 
 - selenium
 
-- httplib2
-
 You will need Firefox installed on the system. Gecko driver executable file is provieded for Windows users. Linux users can enjoy without any executables, as long as Firefox is installed.
 
 ## Features
