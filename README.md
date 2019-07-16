@@ -2,7 +2,7 @@
 	<br>
 	<img src="https://raw.githubusercontent.com/ProHackTech/FreshProxies/master/git_assets/logo.png" alt="FreshProxy Logo">
 	<br>
-	FreshProxy
+	FreshProxies
 </h1>
 
 Python script to grab HTTP, HTTPS, SOCKS4 and SOCKS5 proxies fast. Open multiple proxied browsers.
