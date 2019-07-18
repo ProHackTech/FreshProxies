@@ -25,22 +25,22 @@ You will need Firefox installed on the system. Gecko driver executable file is p
 
 [+] Open proxied Firefox instances after grabbing proxy list
 
-[+] Automatically check for dead proxies
+[+] Check for dead proxies
 
-[+] FreshProxies auto-update-check support
+[+] FreshProxies auto-update-check
 
-### Whats New [v1002]
+[+] Specify time to keep the proxies browsers active
 
-- Fixed update check | Add verbosity
+[+] Specify custom url for proxy browsers
 
-- Check and remove dead proxies
 
-- Auto update check support
+### Whats New [v1003]
 
-- Add banner
+[+] User can add custom url for proxy browser
 
-- Add support for running proxied browser after grabbing proxies (has bugs!)
+[+] Fixed proxy browser after grab bug
 
+[+] Fix global variable set bug
 
 ## How To
 

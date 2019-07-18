@@ -8,6 +8,14 @@ from selenium.webdriver.common.proxy import Proxy, ProxyType
 from core.colors import c_white, c_green, c_red, c_yellow, c_blue
 
 '''
+________________
+WHAT'S NEW v1003
+----------------
+
++ Fix global variable set issue
++ Fix proxy browser after grab bug
++ User can add custom url for proxy browser
+
 _____
 TO-DO
 -----
@@ -33,7 +41,7 @@ NOTE ON WEBDRIVER ERRORS
 
 - These errors occur if a proxy is not working properly. Remove that proxy from the list.
 
-- Feature to check proxies automatically will be made in the future.
+- use --checkdead flag to auto check and remove dead proxies 
 
 '''
 
@@ -50,6 +58,8 @@ CheckDeadProxies = False
 # for proxybrowser with proxy grab, false by default
 ProxifyAfterGrab = False
 ProxifyAfterGrab_TimeSec = 0000
+# url for proxy browser
+proxify_url = ''
 
 # Function: Clearing screen.. no hate pls. I need quick fixes
 def ClrScrn():
@@ -99,7 +109,8 @@ def proxify_start(proxy, timesec):
 
 	# start webdriver
 	driver = webdriver.Firefox()
-	driver.get("https://www.whatismyip.com/") # default URL to make sure you're proxied
+	### ENTER YOUR CUSTOM URL HERE v
+	driver.get(proxify_url) # default URL to make sure you're proxied
 
 	# keeping the browser window open
 	if timesec != 0000:
@@ -217,14 +228,14 @@ def download_proxy(url, output, pType):
 	driver.quit()
 
 	# if checkdead flag passed
-	if CheckDeadProxies == True:
+	if CheckDeadProxies:
 		check_dead_proxies()
 
-	# save file function
+	# save proxies to file
 	save_list(output)
 
 	# proxify browser after grab
-	if ProxifyAfterGrab == True:
+	if ProxifyAfterGrab:
 		proxify_session(output, ProxifyAfterGrab_TimeSec)
 
 # store threads list
@@ -312,10 +323,16 @@ def banner():
 
 # Function: Initialize script
 def init():
+	# global variables
+	global CheckDeadProxies
+	global ProxifyAfterGrab
+	global ProxifyAfterGrab_TimeSec
+	global proxify_url
+
 	# FreshProxies banner
 	banner()
 	# argument parsing
-	parser = argparse.ArgumentParser(description="Get Fresh Proxies")
+	parser = argparse.ArgumentParser(description="FreshProxies")
 	# proxy type to gather
 	parser.add_argument("-t", "--type", help="Enter Proxy Type [HTTP/HTTPS/SOCKS4/SOCKS5/ALL]", type=str)
 	# enter a filename
@@ -326,22 +343,33 @@ def init():
 	parser.add_argument("-ts", "--timesec", help="Specify time delay in seconds", type=int)
 	# proxy browser mode
 	parser.add_argument("-pb", "--proxybrowser", help="Opens clean browser for proxy list", action="store_true")
+	# proxy url for proxy browser
+	parser.add_argument("-pu", "--proxyurl", help="Enter your custom url for proxy browser", type=str)
 	# update freshproxy
 	parser.add_argument("-upd", "--update", help="Update FreshProxy", action="store_true")
 
 	args = parser.parse_args()
 
 	if args.type: # grabbing proxies
+		# if checkdead flag is set
+		if args.checkdead:
+			CheckDeadProxies = True
+		# if proxybrowser flag is set
+		if args.proxybrowser: # proxify after grab
+			ProxifyAfterGrab = True
+			# if timesec is specified
+			if args.timesec:
+				ProxifyAfterGrab_TimeSec = args.timesec
+			# if proxy url specified:
+			if args.proxyurl:
+				proxify_url = args.proxyurl
+			else:
+				proxify_url = "https://www.whatismyip.com/"
+		# if filename is specified
 		if args.filename:
 			selection_manager(args.type, args.filename)
 		else:
 			selection_manager(args.type, "proxies.txt")
-		if args.checkdead:
-			CheckDeadProxies = True
-		if args.proxybrowser: # proxify after grab
-			ProxifyAfterGrab = True
-			if args.timesec:
-				ProxifyAfterGrab_TimeSec = args.timesec
 	elif args.proxybrowser: # proxy browser
 		if args.filename:
 			if args.timesec:
