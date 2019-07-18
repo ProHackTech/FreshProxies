@@ -19,17 +19,12 @@ WHAT'S NEW v1003
 _____
 TO-DO
 -----
-+ optimize element searching on webdriver
 
 + allow to open specific number of proxy browsers instead of whole list
 
 + allow proxy grab from other websites
 
 + allow grabbing specific number of proxies instead of default 26
-
-+ migrate to bs4 page search instead of webdriver search
-
-+ auto update check on start (but not run updater)
 
 Features will not be developed in order, so keep checking for new versions.
 
@@ -41,7 +36,7 @@ NOTE ON WEBDRIVER ERRORS
 
 - These errors occur if a proxy is not working properly. Remove that proxy from the list.
 
-- use --checkdead flag to auto check and remove dead proxies 
+- use --checkdead flag to auto check and remove dead proxies
 
 '''
 
@@ -309,14 +304,18 @@ def update_check():
 
 def banner():
 	ClrScrn()
-	print(f'''{c_blue}
- _______              _     ______                _            
-(_______)            | |   (_____ \              (_)           
- _____ ____ ____  ___| | _  _____) )___ ___ _   _ _  ____  ___ 
-|  ___) ___) _  )/___) || \|  ____/ ___) _ ( \ / ) |/ _  )/___)
-| |  | |  ( (/ /|___ | | | | |   | |  | |_| ) X (| ( (/ /|___ |
-|_|  |_|   \____|___/|_| |_|_|   |_|   \___(_/ \_)_|\____|___/ {c_white}
-		''')
+	print(f'''{c_red}
+
+ █████▒██▀███  ▓█████   ██████  ██░ ██  ||  ██▓███   ██▀███   ▒█████  ▒██   ██▒ ██▓▓█████   ██████ 
+▓██   ▒▓██ ▒ ██▒▓█   ▀ ▒██    ▒ ▓██░ ██ || ▒▓██░  ██▒▓██ ▒ ██▒▒██▒  ██▒▒▒ █ █ ▒░▓██▒▓█   ▀ ▒██    ▒ 
+▒████ ░▓██ ░▄█ ▒▒███   ░ ▓██▄   ▒██▀▀██ || ░▓██░ ██▓▒▓██ ░▄█ ▒▒██░  ██▒░░  █   ░▒██▒▒███   ░ ▓██▄   
+░▓█▒  ░▒██▀▀█▄  ▒▓█  ▄   ▒   ██▒░▓█ ░██ || ▒██▄█▓▒ ▒▒██▀▀█▄  ▒██   ██░ ░ █ █ ▒ ░██░▒▓█  ▄   ▒   ██▒
+░▒█░   ░██▓ ▒██▒░▒████▒▒██████▒▒░▓█▒░██ || ▓▒██▒ ░  ░░██▓ ▒██▒░ ████▓▒░▒██▒ ▒██▒░██░░▒████▒▒██████▒▒
+ ▒ ░   ░ ▒▓ ░▒▓░░░ ▒░ ░▒ ▒▓▒ ▒ ░ ▒ ░░▒░ || ▒▒▓▒░ ░  ░░ ▒▓ ░▒▓░░ ▒░▒░▒░ ▒▒ ░ ░▓ ░░▓  ░░ ▒░ ░▒ ▒▓▒ ▒ ░
+ ░       ░▒ ░ ▒░ ░ ░  ░░ ░▒  ░ ░ ▒ ░▒░  || ░░▒ ░       ░▒ ░ ▒░  ░ ▒ ▒░ ░░   ░▒ ░ ▒ ░ ░ ░  ░░ ░▒  ░ ░
+ ░ ░     ░░   ░    ░   ░  ░  ░   ░  ░░  || ░░░         ░░   ░ ░ ░ ░ ▒   ░    ░   ▒ ░   ░   ░  ░  ░  
+          ░        ░  ░      ░   ░  ░   || ░            ░         ░ ░   ░    ░   ░     ░  ░      ░  
+		{c_white}''')
 
 	print(f"\n[Version Check]...")
 	update_check()
