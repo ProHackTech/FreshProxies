@@ -108,6 +108,28 @@ Uses default proxy list with name "proxies.txt" and timesec "9999"
 
 > python fp.py -pb -ts 120
 
+### Proxifies browser with custom url
+
+> python fp.py -pb -pu "https://your_url.something/"
+
+## Proxy Browser after proxy grab
+
+All proxy browser commands available here
+
+### Example
+
+The following command will perform these actions:
+
+ - grab http proxies
+
+ - check for dead proxies
+
+ - save the proxy list
+
+ - start proxy browsers, with your url for 240 seconds
+
+> python fp.py -t http -checkd -pb -pu "https://your_website.com/" -ts 240
+
 
 ## License
 
