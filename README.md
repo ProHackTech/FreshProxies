@@ -28,36 +28,55 @@ You need the following python packages installed:
 
 - selenium
 
+- requests
+
+
 You will need Firefox installed on the system. Gecko driver executable file is provieded for Windows users. Linux users can enjoy without any executables, as long as Firefox is installed.
 
 ## Features
 
 [+] Grab Http/Https/Socks4/Socks5 proxies
 
-[+] Open proxied Firefox instances for each proxy in a list
+[+] Specify number of proxies to save
+
+[+] Filter proxies by country
+
+[+] Filter proxies by anonymity
+
+[+] Open proxied Firefox instances for proxies in file list
 
 [+] Open proxied Firefox instances after grabbing proxy list
 
-[+] Check for dead proxies
+[+] Check against URL and remove dead proxies automatically (optional)
 
-[+] FreshProxies auto-update-check
-
-[+] Specify time to keep the proxies browsers active
+[+] Specify time to keep proxied browsers active
 
 [+] Specify custom url for proxy browsers
 
+[+] FreshProxies auto-update-check
 
-### Whats New [v1003]
 
-[+] User can add custom url for proxy browser
+### Whats New [v1004]
 
-[+] Fixed proxy browser after grab bug
+[+] Uses API instead of scraping: instant proxies
 
-[+] Fix global variable set bug
+[+] Revamped entire code
+
+[+] Use global variables to hold arguments: cleaner, maintainable code
+
+[+] Add option to specify number of proxies to save
+
+[+] Add option to specify number of proxied browsers to open
+
+[+] Choose proxies by country
+
+[+] Choose proxies by anonymity
+
+[+] Removed junk arguments
 
 ## How To
 
-### Video Demonstration
+### Video Demonstration (old version)
 
 *Grabbing Proxies*
 
@@ -137,12 +156,14 @@ The following command will perform these actions:
 
  - check for dead proxies
 
- - save the proxy list
+ - save proxies list
 
  - start proxy browsers, with your url for 240 seconds
 
-> python fp.py -t http -checkd -pb -pu "https://your_website.com/" -ts 240
+> python fp.py -t http -pb -pu "https://your_website.com/" -ts 240
 
+
+**More arguments can be found using --help menu**
 
 ## License
 
