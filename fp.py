@@ -2,6 +2,7 @@ import os, threading, argparse, requests
 import urllib.request, urllib.error, socket
 from time import sleep
 from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.common.proxy import Proxy, ProxyType
 from core.colors import c_white, c_green, c_red, c_yellow, c_blue
@@ -195,7 +196,6 @@ def grabber():
 			url = "https://www.proxy-list.download/api/v1/get?"
 			print(f"{c_green}[Proxy Type] {c_yellow}>>{c_yellow} {c_blue}{proxy_type}{c_white}")
 			url += f"type={proxy_type}"
-
 			# determining proxy anonymity
 			if not arg_anonymity == '':
 				if not arg_anonymity in proxy_anonymity:
@@ -204,21 +204,18 @@ def grabber():
 				else:
 					url += f"&anon={arg_anonymity}"
 				print(f"{c_green}[Anonymity] {c_yellow}>>{c_yellow} {c_blue}{arg_anonymity}{c_white}")
-
 			# determine proxy country
 			if not arg_country == '':
 				url += f"&country={arg_country}"
 				print(f"{c_green}[Country] {c_yellow}>>{c_yellow} {c_blue}{arg_country}{c_white}")
-
 			# get proxies
 			proxies_page = urllib.request.urlopen(url)
-			#print(proxies_page.text)
 			cleaner_(proxies_page.text)
 	elif arg_type in proxy_types:
+		# if bulk flag, run the bulk grabber before default
 		url = "https://www.proxy-list.download/api/v1/get?"
 		url += f"type={arg_type}"
 		print(f"{c_green}[Proxy Type] {c_yellow}>>{c_yellow} {c_blue}{arg_type.upper()}{c_white}")
-
 		# determining proxy anonymity
 		if not arg_anonymity == '':
 			if not arg_anonymity in proxy_anonymity:
@@ -227,12 +224,10 @@ def grabber():
 			else:
 				url += f"&anon={arg_anonymity}"
 			print(f"{c_green}[Anonymity] {c_yellow}>>{c_yellow} {c_blue}{arg_anonymity}{c_white}")
-
 		# determine proxy country
 		if not arg_country == '':
 			url += f"&country={arg_country}"
 			print(f"{c_green}[Country] {c_yellow}>>{c_yellow} {c_blue}{arg_country}{c_white}")
-
 		# get proxies
 		proxies_page = requests.get(url, stream=True)
 		#print(proxies_page.text)
