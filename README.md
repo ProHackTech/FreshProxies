@@ -55,6 +55,10 @@ You will need Firefox installed on the system. Gecko driver executable file is p
 
 [+] FreshProxies auto-update-check
 
+### Whats New [v1005]
+
+[+] Fix critical bug in ProxyBrowser threading
+
 
 ### Whats New [v1004]
 

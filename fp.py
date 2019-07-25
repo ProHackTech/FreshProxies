@@ -68,7 +68,7 @@ def proxybrowser_ripper(sender):
 	if not arg_maxbrowsers > len(proxies):
 		trimmed_proxies = proxies[:arg_maxbrowsers]
 	# creating thread list for starting browser thread
-	rippers = [threading.Thread(target=proxy_browser, args=(proxy)) for proxy in trimmed_proxies]
+	rippers = [threading.Thread(target=proxy_browser, args=(proxy,)) for proxy in trimmed_proxies]
 	# starting the threads
 	for ripper in rippers:
 		ripper.start()
