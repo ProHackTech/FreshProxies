@@ -19,6 +19,7 @@ arg_country = ''
 arg_filename = ''
 arg_limit = 500
 arg_proxyurl = ''
+#arg_randomagent = False
 arg_pb_timesec = 1000
 arg_maxbrowsers = 10
 arg_nocheck = False
@@ -31,7 +32,8 @@ def ClrScrn():
 def proxy_browser(proxy):
 	global arg_pb_timesec
 	global arg_proxyurl
-	# apply proxy to firefox
+	global arg_randomagent
+	# apply proxy to firefox using desired capabilities
 	PROX = proxy
 	webdriver.DesiredCapabilities.FIREFOX['proxy']={
 		"httpProxy":PROX,
@@ -39,13 +41,26 @@ def proxy_browser(proxy):
 		"sslProxy":PROX,
 		"proxyType":"MANUAL"
 	}
-	# start webdriver
+
+	#options = Options()
+	#options.add_argument("window-size=1400,600")
 	driver = webdriver.Firefox()
-	driver.get(arg_proxyurl) # default URL to make sure you're proxied
-	# keeping the browser window open
-	sleep(arg_pb_timesec)
-	# quit the driver
-	driver.quit()
+	# for random user agent
+	#if arg_randomagent == True:
+	#	from fake_useragent import UserAgent
+	#	ua = UserAgent()
+	#	options.add_argument(f"user-agent={ua.random}")
+	try:
+		driver.get(arg_proxyurl)
+		# keeping the browser window open
+		sleep(arg_pb_timesec)
+		# close driver
+		driver.close()
+		driver.quit()
+	except Exception as e:
+		print(f"{c_red}{e}{c_white}")
+		driver.close()
+		driver.quit()
 
 # multiple browser threads
 # senders :: 0=default | 1=aftergrab
@@ -59,7 +74,7 @@ def proxybrowser_ripper(sender):
 			arg_filename = 'proxies.txt'
 		# read proxy list
 		proxies = [line.rstrip('\n') for line in open(arg_filename)]
-	else: # proxies will be taken from list memory
+	elif sender == 1: # proxies will be taken from list memory
 		for x in range(0, len(proxy_ips)):
 			proxies  = f"{proxy_ips[x]}:{proxy_ports[x]}"
 	# trim to limit
@@ -68,13 +83,16 @@ def proxybrowser_ripper(sender):
 	if not arg_maxbrowsers > len(proxies):
 		trimmed_proxies = proxies[:arg_maxbrowsers]
 	# creating thread list for starting browser thread
-	rippers = [threading.Thread(target=proxy_browser, args=(proxy,)) for proxy in trimmed_proxies]
+	rippers = [threading.Thread(target=proxy_browser, args=(proxy,), daemon=True) for proxy in trimmed_proxies]
 	# starting the threads
 	for ripper in rippers:
 		ripper.start()
 	# join the threads to pool
 	for ripper in rippers:
-		ripper.join()
+		try:
+			ripper.join()
+		except Exception as e:
+			print(f"{c_red}{e}{c_white}")
 
 # Function: Checking proxy response
 def proxy_response_check(prox):
@@ -290,6 +308,7 @@ def init():
 	global arg_checkdead
 	global arg_limit
 	global arg_proxyurl
+	#global arg_randomagent
 	global arg_pb_timesec
 	global arg_maxbrowsers
 	global arg_nocheck
@@ -310,6 +329,7 @@ def init():
 	# proxy browser options
 	parser.add_argument("-pb", "--proxybrowser", help="Opens browser for proxies", action="store_true")
 	parser.add_argument("-pu", "--proxyurl", help="Enter your custom url for proxy browser", type=str)
+	#parser.add_argument("-ra", "--randomagent", help="Random user agent", action="store_true")
 	parser.add_argument("-ts", "--timesec", help="Time seconds to keep browsers alive", type=int)
 	parser.add_argument("-mb", "--maxbrowsers", help="Maximum number of browsers to open", type=int)
 
@@ -326,6 +346,8 @@ def init():
 		arg_limit = args.limit
 	if args.proxyurl:
 		arg_proxyurl = args.proxyurl
+	#if args.randomagent:
+	#	arg_randomagent = True
 	if args.timesec:
 		arg_pb_timesec = args.timesec
 	if args.maxbrowsers:

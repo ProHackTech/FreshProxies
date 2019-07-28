@@ -35,48 +35,35 @@ You will need Firefox installed on the system. Gecko driver executable file is p
 
 ## Features
 
-[+] Grab Http/Https/Socks4/Socks5 proxies
+[-] Grab Http/Https/Socks4/Socks5 proxies
 
-[+] Specify number of proxies to save
+[-] Specify number of proxies to save
 
-[+] Filter proxies by country
+[-] Filter proxies by country
 
-[+] Filter proxies by anonymity
+[-] Filter proxies by anonymity
 
-[+] Open proxied Firefox instances for proxies in file list
+[-] Open proxied Firefox instances for proxies in file list
 
-[+] Open proxied Firefox instances after grabbing proxy list
+[-] Open proxied Firefox instances after grabbing proxy list
 
-[+] Check against URL and remove dead proxies automatically (optional)
+[-] Check against URL and remove dead proxies automatically (optional)
 
-[+] Specify time to keep proxied browsers active
+[-] Specify time to keep proxied browsers active
 
-[+] Specify custom url for proxy browsers
+[-] Specify custom url for proxy browsers
 
-[+] FreshProxies auto-update-check
+[-] FreshProxies auto-update-check
 
-### Whats New [v1005]
+### Whats New [v1006]
 
-[+] Fix critical bug in ProxyBrowser threading
+[-] Exception handling in threads
 
+[-] Auto exit browser on any exception
 
-### Whats New [v1004]
+[-] Exit browser on keyboard interrupt
 
-[+] Uses API instead of scraping: instant proxies
-
-[+] Revamped entire code
-
-[+] Use global variables to hold arguments: cleaner, maintainable code
-
-[+] Add option to specify number of proxies to save
-
-[+] Add option to specify number of proxied browsers to open
-
-[+] Choose proxies by country
-
-[+] Choose proxies by anonymity
-
-[+] Removed junk arguments
+*Note:* For some weird reason, proxy browser after grab is making the proxy servers refuse connections :< idk wth is wrong with this shitz. But regular command without grab works fine..
 
 ## How To
 
@@ -108,8 +95,6 @@ You will need Firefox installed on the system. Gecko driver executable file is p
 
 ### ALL Proxies
 
-**NOTE**: This option gives error with http proxy grabbing, but all others are grabbed. Run this and then grab http proxy using "--type http" manually.
-
 > python fp.py -t all
 
 ## Proxify Browser
@@ -120,15 +105,17 @@ This option allows you to open multi-threaded instances of Firefox run through p
 
 *-pb* : proxy browser
 
+*-pu* : custom url
+
+*-mb* : maximum browsers to open
+
 *-ts* : timesec to run the browser sessions
 
 *-f* : specify the proxy file list
 
-Options '-ts' and '-f' optional.
-
 ### Proxify using default list
 
-Uses default proxy list with name "proxies.txt" and timesec "9999"
+Uses default proxy list with name "proxies.txt"
 
 > python fp.py -pb
 
@@ -152,19 +139,19 @@ Uses default proxy list with name "proxies.txt" and timesec "9999"
 
 All proxy browser commands available here
 
-### Example
+## Example
 
 The following command will perform these actions:
 
- - grab http proxies
+ - grab http proxies (-t)
 
- - check for dead proxies
+ - do not check for dead proxies (--nocheck)
 
- - save proxies list
+ - save only 50 proxies (-l)
 
- - start proxy browsers, with your url for 240 seconds
+ - start 10 proxied browsers, with your url for 240 seconds
 
-> python fp.py -t http -pb -pu "https://your_website.com/" -ts 240
+> python fp.py -t http -nocheck -l 50 -pb -pu "https://your_website.com/" -ts 240 -mb 10
 
 
 **More arguments can be found using --help menu**

@@ -8,6 +8,9 @@ from selenium.webdriver.common.proxy import Proxy, ProxyType
 from core.colors import c_white, c_green, c_red, c_yellow, c_blue
 
 '''
+
+ -- DEPRECIATED --
+
 ________________
 WHAT'S NEW v1003
 ----------------
@@ -15,18 +18,6 @@ WHAT'S NEW v1003
 + Fix global variable set issue
 + Fix proxy browser after grab bug
 + User can add custom url for proxy browser
-
-_____
-TO-DO
------
-
-+ allow to open specific number of proxy browsers instead of whole list
-
-+ allow proxy grab from other websites
-
-+ allow grabbing specific number of proxies instead of default 26
-
-Features will not be developed in order, so keep checking for new versions.
 
 ________________________
 NOTE ON WEBDRIVER ERRORS
@@ -154,7 +145,7 @@ def check_dead_proxies():
 	socket_timeout = 5
 	isAnyDead = False # boolean flag if any dead proxy | small optimization
 	print(f"\n\n{c_green}[Checking Dead Proxies]{c_white}")
-	print(f"{c_green}[Checking Against] {c_white}>>{c_yellow} https://www.google.com/{c_white}")
+	print(f"{c_green}[Checking Against] {c_white}>>{c_yellow} https://www.youtube.com/watch?v=K8zzQrtqCek{c_white}")
 	# set socket timeout
 	print(f"{c_green}[Socket Timeout] {c_white}>>{c_yellow} {socket_timeout}{c_white}")
 	socket.setdefaulttimeout(socket_timeout)
