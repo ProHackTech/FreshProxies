@@ -7,19 +7,6 @@
 
 Python script to grab HTTP, HTTPS, SOCKS4 and SOCKS5 proxies fast. Open multiple proxied browsers.
 
-```
-
- █████▒██▀███  ▓█████   ██████  ██░ ██  ||  ██▓███   ██▀███   ▒█████  ▒██   ██▒ ██▓▓█████   ██████ 
-▓██   ▒▓██ ▒ ██▒▓█   ▀ ▒██    ▒ ▓██░ ██ || ▒▓██░  ██▒▓██ ▒ ██▒▒██▒  ██▒▒▒ █ █ ▒░▓██▒▓█   ▀ ▒██    ▒ 
-▒████ ░▓██ ░▄█ ▒▒███   ░ ▓██▄   ▒██▀▀██ || ░▓██░ ██▓▒▓██ ░▄█ ▒▒██░  ██▒░░  █   ░▒██▒▒███   ░ ▓██▄   
-░▓█▒  ░▒██▀▀█▄  ▒▓█  ▄   ▒   ██▒░▓█ ░██ || ▒██▄█▓▒ ▒▒██▀▀█▄  ▒██   ██░ ░ █ █ ▒ ░██░▒▓█  ▄   ▒   ██▒
-░▒█░   ░██▓ ▒██▒░▒████▒▒██████▒▒░▓█▒░██ || ▓▒██▒ ░  ░░██▓ ▒██▒░ ████▓▒░▒██▒ ▒██▒░██░░▒████▒▒██████▒▒
- ▒ ░   ░ ▒▓ ░▒▓░░░ ▒░ ░▒ ▒▓▒ ▒ ░ ▒ ░░▒░ || ▒▒▓▒░ ░  ░░ ▒▓ ░▒▓░░ ▒░▒░▒░ ▒▒ ░ ░▓ ░░▓  ░░ ▒░ ░▒ ▒▓▒ ▒ ░
- ░       ░▒ ░ ▒░ ░ ░  ░░ ░▒  ░ ░ ▒ ░▒░  || ░░▒ ░       ░▒ ░ ▒░  ░ ▒ ▒░ ░░   ░▒ ░ ▒ ░ ░ ░  ░░ ░▒  ░ ░
- ░ ░     ░░   ░    ░   ░  ░  ░   ░  ░░  || ░░░         ░░   ░ ░ ░ ░ ▒   ░    ░   ▒ ░   ░   ░  ░  ░  
-          ░        ░  ░      ░   ░  ░   || ░            ░         ░ ░   ░    ░   ░     ░  ░      ░  
-```
-
 ## Instructions
 
 You need the following python packages installed:
@@ -35,33 +22,22 @@ You will need Firefox installed on the system. Gecko driver executable file is p
 
 ## Features
 
-[-] Grab Http/Https/Socks4/Socks5 proxies
-
-[-] Specify number of proxies to save
-
-[-] Filter proxies by country
-
-[-] Filter proxies by anonymity
-
-[-] Open proxied Firefox instances for proxies in file list
-
-[-] Open proxied Firefox instances after grabbing proxy list
-
-[-] Check against URL and remove dead proxies automatically (optional)
-
-[-] Specify time to keep proxied browsers active
-
-[-] Specify custom url for proxy browsers
-
-[-] FreshProxies auto-update-check
+- [x] Grab Http/Https/Socks4/Socks5 proxies
+- [x] Specify number of proxies to save
+- [x] Filter proxies by country
+- [x] Filter proxies by anonymity
+- [x] Open proxied Firefox instances for proxies in file list
+- [x] Open proxied Firefox instances after grabbing proxy list
+- [x] Check against URL and remove dead proxies automatically (optional)
+- [x] Specify time to keep proxied browsers active
+- [x] Specify custom url for proxy browsers
+- [x] FreshProxies auto-update-check
 
 ### Whats New [v1006]
 
-[-] Exception handling in threads
-
-[-] Auto exit browser on any exception
-
-[-] Exit browser on keyboard interrupt
+- [x] Exception handling in threads
+- [x] Auto exit browser on any exception
+- [x] Exit browser on keyboard interrupt
 
 *Note:* For some weird reason, proxy browser after grab is making the proxy servers refuse connections :< idk wth is wrong with this shitz. But regular command without grab works fine..
 
