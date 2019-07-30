@@ -1,12 +1,11 @@
-import os, threading, argparse, requests
+import os, threading, argparse, requests, time
 import urllib.request, urllib.error, socket
-from time import sleep
+from prettytable import PrettyTable
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.common.proxy import Proxy, ProxyType
 from core.colors import c_white, c_green, c_red, c_yellow, c_blue
-
 
 # store proxy information
 proxy_ips, proxy_ports = [], []
@@ -53,7 +52,7 @@ def proxy_browser(proxy):
 	try:
 		driver.get(arg_proxyurl)
 		# keeping the browser window open
-		sleep(arg_pb_timesec)
+		time.sleep(arg_pb_timesec)
 		# close driver
 		driver.close()
 		driver.quit()
@@ -149,50 +148,67 @@ def cleaner_(page_data):
 	global arg_filename
 	global arg_limit
 	global arg_nocheck
-	print(f"{c_green}[Cleaning Proxy List]{c_white}")
-
 	tempfile = "temp.txt"
+
+	# pretty table
+	xTable = PrettyTable()
+	xTable.field_names = ["Number", "IP Address", "Port"]
+
+	print(f"{c_green}[Cleaning Proxy List]{c_white}")
 	# dump to tempfile
 	file = open(tempfile,"w")
 	file.write(page_data)
 	file.close()
+	
 	# read tempfile
 	with open(tempfile) as f:
 		content = f.readlines()
+	
 	# remove tempfile
 	try:
 		os.remove(tempfile)
 	except Exception as e:
-		sleep(2)
+		time.sleep(2)
 		try:
 			os.unlink(tempfile)
 		except Exception as ee:
 			pass
+	
 	# clean \r\n
 	content = [x.rstrip() for x in content]
 	# clean empty index
 	content = [item for item in content if item != '']
+	
 	# add to global list
 	for item in content:
 		tempprox = item.split(":")
 		proxy_ips.append(tempprox[0])
 		proxy_ports.append(tempprox[1])
+	
 	# start auto check
 	if not arg_nocheck:
 		print(f"{c_white}This will take some time.. Dead proxies will automatically be removed. Relax.")
 		check_dead_proxies()
+	
 	# save clean list
 	if arg_filename == '':
 		arg_filename = 'proxies.txt'
 	f = open(arg_filename,"w")
 	num_saved = 0
+
+	# join and write to file
 	for x in range(0, arg_limit):
 		if not x > (len(proxy_ips)-1):
 			joinproxy = f"{proxy_ips[x]}:{proxy_ports[x]}"
 			f.write(f"{joinproxy}\n")
 			num_saved += 1
-			print(f"{c_green}[Proxy:{x}] {c_yellow}>> {c_blue}{proxy_ips[x]}{c_yellow}:{c_blue}{proxy_ports[x]}{c_white}")
+			pretty_ip = f"{c_blue}{proxy_ips[x]}{c_white}"
+			pretty_port = f"{c_blue}{proxy_ports[x]}{c_white}"
+			xTable.add_row([f'{c_yellow}{x}{c_red}', f"{c_blue}{proxy_ips[x]}{c_red}", f"{c_blue}{proxy_ports[x]}{c_red}"])
+			#print(xTable)
+			#print(f"{c_green}[Proxy:{x}] {c_yellow}>> {c_blue}{proxy_ips[x]}{c_yellow}:{c_blue}{proxy_ports[x]}{c_white}")
 	f.close()
+	print(xTable)
 	print(f"{c_green}[Total Proxies] {c_yellow}>>{c_white} {num_saved}")
 	print(f"{c_green}[Save Proxies] {c_yellow}>> {c_blue}{arg_filename}{c_white}")
 
@@ -201,11 +217,12 @@ def grabber():
 	global arg_type
 	global arg_anonymity
 	global arg_country
+	global arg_filename
 
+	start = time.time()
 	arg_type = arg_type.lower()
 	proxy_types = ['http', 'https', 'socks4', 'socks5']
 	proxy_anonymity = ['transparent', 'anonymous', 'elite']
-
 	url = "https://www.proxy-list.download/api/v1/get?"
 
 	# determining proxy type
@@ -214,6 +231,7 @@ def grabber():
 			url = "https://www.proxy-list.download/api/v1/get?"
 			print(f"{c_green}[Proxy Type] {c_yellow}>>{c_yellow} {c_blue}{proxy_type}{c_white}")
 			url += f"type={proxy_type}"
+			#print(url)
 			# determining proxy anonymity
 			if not arg_anonymity == '':
 				if not arg_anonymity in proxy_anonymity:
@@ -227,8 +245,16 @@ def grabber():
 				url += f"&country={arg_country}"
 				print(f"{c_green}[Country] {c_yellow}>>{c_yellow} {c_blue}{arg_country}{c_white}")
 			# get proxies
-			proxies_page = urllib.request.urlopen(url)
-			cleaner_(proxies_page.text)
+			try:
+				proxies_page = requests.get(url, stream=True)
+				arg_filename = f"{proxy_type}.txt"
+				page_data = proxies_page.text
+				TGrab = threading.Thread(target=cleaner_, args=(page_data,), daemon=True)
+				TGrab.start()
+				TGrab.join()
+			except Exception as e:
+				print(f"{c_red}{e}{c_white}")
+			print("\n")
 	elif arg_type in proxy_types:
 		# if bulk flag, run the bulk grabber before default
 		url = "https://www.proxy-list.download/api/v1/get?"
@@ -254,6 +280,9 @@ def grabber():
 		# set to default http
 		arg_type = "http"
 		grabber()
+
+	duration = time.time() - start
+	print(f"{c_green}[Time Taken] {c_yellow}>> {c_blue}{duration}{c_white}\n\n")
 
 # read git version
 def git_version():
@@ -304,6 +333,22 @@ def banner():
 	print(f"\n[Version Check]...")
 	update_check()
 
+def pretty_help():
+	banner()
+	hTable = PrettyTable()
+	hTable.field_names = [f"{c_yellow}Argument Less", "Argument Full", f"Description{c_white}"]
+	hTable.add_row([f'{c_green}-t{c_red}', f'{c_green}--type{c_red}', f'{c_white}Enter Proxy Type [HTTP/HTTPS/SOCKS4/SOCKS5/ALL]'])
+	hTable.add_row([f'{c_green}-a{c_red}', f'{c_green}--anonymity{c_red}', f'{c_white}Enter Anonymity Type [transparent/anonymous/elite]'])
+	hTable.add_row([f'{c_green}-c{c_red}', f'{c_green}--country{c_red}', f'{c_white}Enter Country ISO Code [US/RU/IN etc..]'])
+	hTable.add_row([f'{c_green}-f{c_red}', f'{c_green}--filename{c_red}', f'{c_white}Enter Filename [EX: proxies.txt]'])
+	hTable.add_row([f'{c_green}-l{c_red}', f'{c_green}--limit{c_red}', f'{c_white}Enter max proxies to save'])
+	hTable.add_row([f'{c_green}-nocheck{c_red}', f'{c_green}--nocheck{c_red}', f'{c_white}Donot check for dead proxies'])
+	hTable.add_row([f'{c_green}-pb{c_red}', f'{c_green}--proxybrowser{c_red}', f'{c_white}Opens browser for proxies'])
+	hTable.add_row([f'{c_green}-pu{c_red}', f'{c_green}--proxyurl{c_red}', f'{c_white}Enter your custom url for proxy browser'])
+	hTable.add_row([f'{c_green}-ts{c_red}', f'{c_green}--timesec{c_red}', f'{c_white}Time seconds to keep browsers alive'])
+	hTable.add_row([f'{c_green}-mb{c_red}', f'{c_green}--maxbrowsers{c_red}', f'{c_white}Maximum number of browsers to open'])
+	print(hTable)
+
 def init():
 	# global args variable
 	global arg_type
@@ -319,26 +364,32 @@ def init():
 	global arg_nocheck
 
 	banner()
-	parser = argparse.ArgumentParser(description="FreshProxies")
+	parser = argparse.ArgumentParser(description="FreshProxies", add_help=False)
+	parser.add_argument("-h", "--help", help="Help Menu", action="store_true")
 
 	# filters for gathering proxies
-	parser.add_argument("-t", "--type", help="Enter Proxy Type [HTTP/HTTPS/SOCKS4/SOCKS5/ALL]", type=str)
-	parser.add_argument("-a", "--anonymity", help="Enter Anonymity Type [transparent/anonymous/elite]", type=str)
-	parser.add_argument("-c", "--country", help="Enter Country ISO Code [US/RU/IN etc..]", type=str)
-	parser.add_argument("-f", "--filename", help="Enter Filename [EX: proxies.txt]", type=str)
-	parser.add_argument("-l", "--limit", help="Enter max proxies to save", type=int)
+	parser.add_argument("-t", "--type", type=str)
+	parser.add_argument("-a", "--anonymity", type=str)
+	parser.add_argument("-c", "--country", type=str)
+	parser.add_argument("-f", "--filename", type=str)
+	parser.add_argument("-l", "--limit", type=int)
 
 	# don't check for dead proxies
-	parser.add_argument("-nocheck", "--nocheck", help="Donot check for dead proxies", action="store_true")
+	parser.add_argument("-nocheck", "--nocheck", action="store_true")
 
 	# proxy browser options
-	parser.add_argument("-pb", "--proxybrowser", help="Opens browser for proxies", action="store_true")
-	parser.add_argument("-pu", "--proxyurl", help="Enter your custom url for proxy browser", type=str)
-	#parser.add_argument("-ra", "--randomagent", help="Random user agent", action="store_true")
-	parser.add_argument("-ts", "--timesec", help="Time seconds to keep browsers alive", type=int)
-	parser.add_argument("-mb", "--maxbrowsers", help="Maximum number of browsers to open", type=int)
+	parser.add_argument("-pb", "--proxybrowser", action="store_true")
+	parser.add_argument("-pu", "--proxyurl", type=str)
+	#parser.add_argument("-ra", "--randomagent", action="store_true")
+	parser.add_argument("-ts", "--timesec", type=int)
+	parser.add_argument("-mb", "--maxbrowsers", type=int)
 
 	args = parser.parse_args()
+
+	# if help
+	if args.help:
+		pretty_help()
+		exit()
 
 	# settings the global vars
 	if args.anonymity:

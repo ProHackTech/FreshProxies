@@ -1,0 +1,5 @@
+argparse
+selenium
+requests
+ptable
+prettytable

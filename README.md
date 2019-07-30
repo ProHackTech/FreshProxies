@@ -9,14 +9,21 @@ Python script to grab HTTP, HTTPS, SOCKS4 and SOCKS5 proxies fast. Open multiple
 
 ## Instructions
 
-You need the following python packages installed:
+You need the following python packages installed: argparse, selenium, requests, ptable
 
-- argparse
+You can install all by:
 
-- selenium
+### Windows 
 
-- requests
+> python3 -m pip install -r requirements.txt
 
+### Linux
+
+> pip3 install -r requirements.txt
+
+or
+
+> python3-pip install -r requirements.txt
 
 You will need Firefox installed on the system. Gecko driver executable file is provieded for Windows users. Linux users can enjoy without any executables, as long as Firefox is installed.
 
@@ -33,11 +40,11 @@ You will need Firefox installed on the system. Gecko driver executable file is p
 - [x] Specify custom url for proxy browsers
 - [x] FreshProxies auto-update-check
 
-### Whats New [v1006]
+### Whats New [v1007]
 
-- [x] Exception handling in threads
-- [x] Auto exit browser on any exception
-- [x] Exit browser on keyboard interrupt
+- [x] Added pretty table
+- [x] Fix 'all' options 404 Error
+- [x] Better help menu (argparse help is ugly af)
 
 *Note:* For some weird reason, proxy browser after grab is making the proxy servers refuse connections :< idk wth is wrong with this shitz. But regular command without grab works fine..
 
