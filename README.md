@@ -42,11 +42,11 @@ You will need Firefox installed on the system. Gecko driver executable file is p
 
 ### Whats New [v1007]
 
-- [x] Added pretty table
-- [x] Fix 'all' options 404 Error
-- [x] Better help menu (argparse help is ugly af)
+- [x] Add pretty table
+- [x] Fix 'all' options 404 error
+- [x] Custom help display
 
-*Note:* For some weird reason, proxy browser after grab is making the proxy servers refuse connections :< idk wth is wrong with this shitz. But regular command without grab works fine..
+*Note:* For some weird reason, proxy browser after grab is making the proxy servers refuse connections :< But regular command without grab works fine..
 
 ## How To
 
