@@ -4,6 +4,10 @@ from prettytable import PrettyTable
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.proxy import Proxy, ProxyType
 from core.colors import c_white, c_green, c_red, c_yellow, c_blue
 
@@ -21,6 +25,7 @@ arg_proxyurl = ''
 #arg_randomagent = False
 arg_pb_timesec = 1000
 arg_maxbrowsers = 10
+arg_youtubevideo = False
 arg_nocheck = False
 
 # clear screen
@@ -32,6 +37,7 @@ def proxy_browser(proxy):
 	global arg_pb_timesec
 	global arg_proxyurl
 	global arg_randomagent
+	global arg_youtubevideo
 	# apply proxy to firefox using desired capabilities
 	PROX = proxy
 	webdriver.DesiredCapabilities.FIREFOX['proxy']={
@@ -51,6 +57,21 @@ def proxy_browser(proxy):
 	#	options.add_argument(f"user-agent={ua.random}")
 	try:
 		driver.get(arg_proxyurl)
+		# if youtube bot mode
+		if arg_youtubevideo:
+			delay_time = 5 # seconds
+			# if delay time is more than timesec for proxybrowser
+			if delay_time > arg_pb_timesec:
+				# increase proxybrowser timesec
+				arg_pb_timesec += 5
+			# wait for the web element to load
+			try:
+				player_elem = WebDriverWait(driver, delay_time).until(EC.presence_of_element_located((By.ID, 'movie_player')))
+				# performing click when element location
+				time.sleep(2)
+				webdriver.ActionChains(driver).move_to_element(player_elem).click(player_elem).perform()
+			except TimeoutException:
+				print("Loading video control took too much time!")
 		# keeping the browser window open
 		time.sleep(arg_pb_timesec)
 		# close driver
@@ -347,6 +368,7 @@ def pretty_help():
 	hTable.add_row([f'{c_green}-pu{c_red}', f'{c_green}--proxyurl{c_red}', f'{c_white}Enter your custom url for proxy browser'])
 	hTable.add_row([f'{c_green}-ts{c_red}', f'{c_green}--timesec{c_red}', f'{c_white}Time seconds to keep browsers alive'])
 	hTable.add_row([f'{c_green}-mb{c_red}', f'{c_green}--maxbrowsers{c_red}', f'{c_white}Maximum number of browsers to open'])
+	hTable.add_row([f'{c_green}-ytv{c_red}', f'{c_green}--ytvideo{c_red}', f'{c_white}Auto play YouTube video (for view botting)'])
 	print(hTable)
 
 def init():
@@ -361,6 +383,7 @@ def init():
 	#global arg_randomagent
 	global arg_pb_timesec
 	global arg_maxbrowsers
+	global arg_youtubevideo
 	global arg_nocheck
 
 	banner()
@@ -383,6 +406,7 @@ def init():
 	#parser.add_argument("-ra", "--randomagent", action="store_true")
 	parser.add_argument("-ts", "--timesec", type=int)
 	parser.add_argument("-mb", "--maxbrowsers", type=int)
+	parser.add_argument("-ytv", "--ytvideo", action="store_true")
 
 	args = parser.parse_args()
 
@@ -408,6 +432,8 @@ def init():
 		arg_pb_timesec = args.timesec
 	if args.maxbrowsers:
 		arg_maxbrowsers = args.maxbrowsers
+	if args.ytvideo:
+		arg_youtubevideo = True
 	if args.nocheck:
 		arg_nocheck = True
 

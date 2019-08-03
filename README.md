@@ -38,13 +38,13 @@ You will need Firefox installed on the system. Gecko driver executable file is p
 - [x] Check against URL and remove dead proxies automatically (optional)
 - [x] Specify time to keep proxied browsers active
 - [x] Specify custom url for proxy browsers
+- [x] Specify maximum proxy browsers to open
+- [x] Youtube mode - auto play videos once player element is loaded (for view bot)
 - [x] FreshProxies auto-update-check
 
-### Whats New [v1007]
+### Whats New [v1008]
 
-- [x] Add pretty table
-- [x] Fix 'all' options 404 error
-- [x] Custom help display
+- [x] Add youtube mode for auto-playing videos once loaded :) Enjoy!
 
 *Note:* For some weird reason, proxy browser after grab is making the proxy servers refuse connections :< But regular command without grab works fine..
 
