@@ -329,7 +329,7 @@ def update_check():
 		print(f"{c_green}[New Version Available]{c_yellow}There is a new version available!{c_white}")
 		print(f"{c_yellow}-- Follow These Steps To Update --")
 		print(f"{c_green}[Type] {c_yellow}>>{c_blue} cd updater {c_white}(To go inside updater directory)")
-		print(f"{c_green}[Type] {c_yellow}>>{c_blue} python updater.py {c_white}(To run updater)")
+		print(f"{c_green}[Type] {c_yellow}>>{c_blue} python update.py {c_white}(To run updater)")
 		print(f"{c_green}[Type] {c_yellow}>>{c_blue} cd ../  {c_white}(To go back into main directory)")
 		print(f"{c_green}[Type] {c_yellow}>>{c_blue} python fp.py  {c_white}(To run again)\n")
 		version_diff = (content - version_me)
