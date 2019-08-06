@@ -15,18 +15,18 @@ from core.colors import c_white, c_green, c_red, c_yellow, c_blue
 proxy_ips, proxy_ports = [], []
 
 # global variable with default values
-# change if you don't want to pass arguments all the time, couch potatoe
-arg_type = ''
-arg_anonymity = ''
-arg_country = ''
-arg_filename = ''
-arg_limit = 500
-arg_proxyurl = ''
-#arg_randomagent = False
-arg_pb_timesec = 1000
-arg_maxbrowsers = 10
-arg_youtubevideo = False
-arg_nocheck = False
+# change if you don't want to pass arguments all the time
+arg_type = '' # proxy type
+arg_anonymity = '' # anonymity type
+arg_country = '' # country code
+arg_filename = '' # custom filename for proxy type
+arg_limit = 500 # limit of proxies to save
+arg_proxyurl = '' # url for proxy browser or for checking proxies against
+arg_pb_timesec = 1000 # timesec to keep browser window alive
+arg_maxbrowsers = 10 # maximum browser to open. Default 10
+arg_youtubevideo = False # play youtube video
+arg_nocheck = False # do not check proxies -> faster
+arg_browsermode = 'normal' # 'normal' or 'headless'
 
 # clear screen
 def ClrScrn():
@@ -36,8 +36,12 @@ def ClrScrn():
 def proxy_browser(proxy):
 	global arg_pb_timesec
 	global arg_proxyurl
-	global arg_randomagent
 	global arg_youtubevideo
+	global arg_browsermode
+
+	# recheck proxyurl
+	if arg_proxyurl == '':
+		arg_proxyurl = 'https://www.duckduckgo.com/'
 	# apply proxy to firefox using desired capabilities
 	PROX = proxy
 	webdriver.DesiredCapabilities.FIREFOX['proxy']={
@@ -47,17 +51,20 @@ def proxy_browser(proxy):
 		"proxyType":"MANUAL"
 	}
 
-	#options = Options()
-	#options.add_argument("window-size=1400,600")
-	driver = webdriver.Firefox()
-	# for random user agent
-	#if arg_randomagent == True:
-	#	from fake_useragent import UserAgent
-	#	ua = UserAgent()
-	#	options.add_argument(f"user-agent={ua.random}")
+	options = Options()
+	# for browser mode
+	options.headless = False
+	if arg_browsermode == 'headless':
+		options.headless = True
+	driver = webdriver.Firefox(options=options)
 	try:
+		print(f"{c_green}[URL] >> {c_blue}{arg_proxyurl}{c_white}")
+		print(f"{c_green}[Proxy Used] >> {c_blue}{proxy}{c_white}")
+		print(f"{c_green}[Browser Mode] >> {c_blue}{arg_browsermode}{c_white}")
+		print(f"{c_green}[TimeSec] >> {c_blue}{arg_pb_timesec}{c_white}\n\n")
 		driver.get(arg_proxyurl)
-		# if youtube bot mode
+
+		# if youtube view mode
 		if arg_youtubevideo:
 			delay_time = 5 # seconds
 			# if delay time is more than timesec for proxybrowser
@@ -67,9 +74,15 @@ def proxy_browser(proxy):
 			# wait for the web element to load
 			try:
 				player_elem = WebDriverWait(driver, delay_time).until(EC.presence_of_element_located((By.ID, 'movie_player')))
-				# performing click when element location
+				togglebtn_elem = WebDriverWait(driver, delay_time).until(EC.presence_of_element_located((By.ID, 'toggleButton')))
 				time.sleep(2)
+				# click player
 				webdriver.ActionChains(driver).move_to_element(player_elem).click(player_elem).perform()
+				try:
+					# click autoplay button to disable autoplay
+					webdriver.ActionChains(driver).move_to_element(togglebtn_elem).click(togglebtn_elem).perform()
+				except Exception:
+					pass
 			except TimeoutException:
 				print("Loading video control took too much time!")
 		# keeping the browser window open
@@ -107,10 +120,11 @@ def proxybrowser_ripper(sender):
 	# starting the threads
 	for ripper in rippers:
 		ripper.start()
-	# join the threads to pool
+	# join the threads
 	for ripper in rippers:
 		try:
 			ripper.join()
+			print(f"{c_green}[Thread] >> {c_yellow}Number:{c_blue}{ripper}{c_white}")
 		except Exception as e:
 			print(f"{c_red}{e}{c_white}")
 
@@ -368,7 +382,8 @@ def pretty_help():
 	hTable.add_row([f'{c_green}-pu{c_red}', f'{c_green}--proxyurl{c_red}', f'{c_white}Enter your custom url for proxy browser'])
 	hTable.add_row([f'{c_green}-ts{c_red}', f'{c_green}--timesec{c_red}', f'{c_white}Time seconds to keep browsers alive'])
 	hTable.add_row([f'{c_green}-mb{c_red}', f'{c_green}--maxbrowsers{c_red}', f'{c_white}Maximum number of browsers to open'])
-	hTable.add_row([f'{c_green}-ytv{c_red}', f'{c_green}--ytvideo{c_red}', f'{c_white}Auto play YouTube video (for view botting)'])
+	hTable.add_row([f'{c_green}-bm{c_red}', f'{c_green}--browsermode{c_red}', f'{c_white}"normal" or "headless" browser window'])
+	hTable.add_row([f'{c_green}-ytv{c_red}', f'{c_green}--ytvideo{c_red}', f'{c_white}Play YouTube video (for view botting)'])
 	print(hTable)
 
 def init():
@@ -380,11 +395,11 @@ def init():
 	global arg_checkdead
 	global arg_limit
 	global arg_proxyurl
-	#global arg_randomagent
 	global arg_pb_timesec
 	global arg_maxbrowsers
 	global arg_youtubevideo
 	global arg_nocheck
+	global arg_browsermode
 
 	banner()
 	parser = argparse.ArgumentParser(description="FreshProxies", add_help=False)
@@ -403,9 +418,9 @@ def init():
 	# proxy browser options
 	parser.add_argument("-pb", "--proxybrowser", action="store_true")
 	parser.add_argument("-pu", "--proxyurl", type=str)
-	#parser.add_argument("-ra", "--randomagent", action="store_true")
 	parser.add_argument("-ts", "--timesec", type=int)
 	parser.add_argument("-mb", "--maxbrowsers", type=int)
+	parser.add_argument("-bm", "--browsermode", type=str)
 	parser.add_argument("-ytv", "--ytvideo", action="store_true")
 
 	args = parser.parse_args()
@@ -426,8 +441,6 @@ def init():
 		arg_limit = args.limit
 	if args.proxyurl:
 		arg_proxyurl = args.proxyurl
-	#if args.randomagent:
-	#	arg_randomagent = True
 	if args.timesec:
 		arg_pb_timesec = args.timesec
 	if args.maxbrowsers:
@@ -436,6 +449,8 @@ def init():
 		arg_youtubevideo = True
 	if args.nocheck:
 		arg_nocheck = True
+	if args.browsermode:
+		arg_browsermode = args.browsermode
 
 	if args.type:
 		arg_type = args.type
