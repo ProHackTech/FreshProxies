@@ -39,18 +39,20 @@ You will need Firefox installed on the system. Gecko driver executable file is p
 - [x] Specify time to keep proxied browsers active
 - [x] Specify custom url for proxy browsers
 - [x] Specify maximum proxy browsers to open
+- [x] Browsers in normal or headless mode
 - [x] Youtube mode - auto play videos once player element is loaded (for view bot)
 - [x] FreshProxies auto-update-check
 
-### Whats New [v1008]
+### Whats New [v1009]
 
-- [x] Add youtube mode for auto-playing videos once loaded :) Enjoy!
+- [x] Add browser mode 'normal' or 'headless'
+- [x] Add verbosity to proxy browser threads
 
 *Note:* For some weird reason, proxy browser after grab is making the proxy servers refuse connections :< But regular command without grab works fine..
 
 ## How To
 
-### Video Demonstration (old version)
+### Video Demonstration (old version!!)
 
 *Grabbing Proxies*
 
@@ -60,81 +62,70 @@ You will need Firefox installed on the system. Gecko driver executable file is p
 	</a>
 </h3>
 
-### HTTP Proxy
+### Help Menu
+Can be accessed using '-h' or '--help'
 
-> python fp.py --type http
+'''
++---------------+----------------+----------------------------------------------------+
+| Argument Less | Argument Full  |                    Description                     |
++---------------+----------------+----------------------------------------------------+
+|       -t      |     --type     |  Enter Proxy Type [HTTP/HTTPS/SOCKS4/SOCKS5/ALL]   |
+|       -a      |  --anonymity   | Enter Anonymity Type [transparent/anonymous/elite] |
+|       -c      |   --country    |      Enter Country ISO Code [US/RU/IN etc..]       |
+|       -f      |   --filename   |          Enter Filename [EX: proxies.txt]          |
+|       -l      |    --limit     |             Enter max proxies to save              |
+|    -nocheck   |   --nocheck    |            Donot check for dead proxies            |
+|      -pb      | --proxybrowser |             Opens browser for proxies              |
+|      -pu      |   --proxyurl   |      Enter your custom url for proxy browser       |
+|      -ts      |   --timesec    |        Time seconds to keep browsers alive         |
+|      -mb      | --maxbrowsers  |         Maximum number of browsers to open         |
+|      -bm      | --browsermode  |       "normal" or "headless" browser window        |
+|      -ytv     |   --ytvideo    |       Play YouTube video (for view botting)        |
++---------------+----------------+----------------------------------------------------+
+'''
 
-### HTTPS Proxy
 
-> python fp.py -t https
-
-### SOCKS4 Proxy
-
-> python fp.py -t socks4
-
-### SOCKS5 Proxy
-
-> python fp.py -t socks5
-
-### ALL Proxies
-
-> python fp.py -t all
-
-## Proxify Browser
-
-This option allows you to open multi-threaded instances of Firefox run through proxies in the proxy list.
-
-### Arguments available to use
-
-*-pb* : proxy browser
-
-*-pu* : custom url
-
-*-mb* : maximum browsers to open
-
-*-ts* : timesec to run the browser sessions
-
-*-f* : specify the proxy file list
-
-### Proxify using default list
-
-Uses default proxy list with name "proxies.txt"
-
-> python fp.py -pb
-
-### Proxify using custom list
-
-> python fp.py -pb -f your_proxy_list.txt
-
-### Proxify using custom list and timesec (quick automation)
-
-> python fp.py -pb -f proxies.txt -ts 120
-
-### Proxify with timesec and default proxy list
-
-> python fp.py -pb -ts 120
-
-### Proxifies browser with custom url
-
-> python fp.py -pb -pu "https://your_url.something/"
-
-## Proxy Browser after proxy grab
-
-All proxy browser commands available here
-
-## Example
+## Example Command (proxy browser)
 
 The following command will perform these actions:
 
- - grab http proxies (-t)
+ - start 5 proxied browsers, with your url for 240 seconds
 
- - do not check for dead proxies (--nocheck)
+ - start proxies browser in headless mode (specifically). Default is normal mode
 
- - save only 50 proxies (-l)
+> python fp.py -pb -pu "https://your_website.com/" -ts 240 -mb 5 -bm headless
 
- - start 10 proxied browsers, with your url for 240 seconds
 
-> python fp.py -t http -nocheck -l 50 -pb -pu "https://your_website.com/" -ts 240 -mb 10
+## Example Command (proxy grab)
+
+The following command will perform these actions:
+
+ - grab HTTP proxies
+
+ - Do not check for dead proxies: optimal, faster
+
+ - Save only 50 proxies to file (limit)
+
+ - Save into custom filename (default name = proxies.txt)
+
+> python fp.py -t http -l 50 --filename your_filename_without_spaces.txt -nocheck
+
+
+## Example Command (proxy browser after grab)
+
+The following command will perform these actions:
+
+ - grab HTTP proxies
+
+ - Do not check for dead proxies: optimal, faster
+
+ - Save only 50 proxies to file (limit)
+
+ - start 5 proxied browsers, with your url for 240 seconds
+
+ - start proxies browser in normal mode (specifically). Default is normal mode
+
+> python fp.py -t http -l 50 -nocheck -pb -pu https://www.yoursite.com/ -ts 240 -mb 5 -bm normal
 
 
 **More arguments can be found using --help menu**
@@ -166,3 +157,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 ```
+
+## Suggestions / Issues / Requests
+Please post an issue here: https://github.com/ProHackTech/FreshProxies/issues with appropriate label (optional). You can post feature requests, bugs, performance issues, feedbacks, ask help, your improvements, documentation help or improvements etc.
