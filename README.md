@@ -65,7 +65,8 @@ You will need Firefox installed on the system. Gecko driver executable file is p
 ### Help Menu
 Can be accessed using '-h' or '--help'
 
-'''
+```
+
 +---------------+----------------+----------------------------------------------------+
 | Argument Less | Argument Full  |                    Description                     |
 +---------------+----------------+----------------------------------------------------+
@@ -82,7 +83,8 @@ Can be accessed using '-h' or '--help'
 |      -bm      | --browsermode  |       "normal" or "headless" browser window        |
 |      -ytv     |   --ytvideo    |       Play YouTube video (for view botting)        |
 +---------------+----------------+----------------------------------------------------+
-'''
+
+```
 
 
 ## Example Command (proxy browser)
