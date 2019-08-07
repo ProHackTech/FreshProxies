@@ -2,4 +2,4 @@ argparse
 selenium
 requests
 ptable
-prettytable
+ptable
