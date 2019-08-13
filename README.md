@@ -9,52 +9,24 @@
 	Python script to grab HTTP, HTTPS, SOCKS4 and SOCKS5 proxies fast. Proxied Browsers.
 </p>
 
-<table>
-	<tr>
-		<th>Features</th>
-	</tr>
-	<tr>
-		<td>Grab Http/Https/Socks4/Socks5 proxies</td>
-	</tr>
-	<tr>
-		<td>Specify number of proxies to save</td>
-	</tr>
-	<tr>
-		<td>Filter proxies by country</td>
-	</tr>
-	<tr>
-		<td>Filter proxies by anonymity</td>
-	</tr>
-	<tr>
-		<td>Open proxied Firefox instances for proxies in file list</td>
-	</tr>
-	<tr>
-		<td>Open proxied Firefox instances after grabbing proxy list</td>
-	</tr>
-	<tr>
-		<td>Check proxies against URL and remove dead proxies automatically</td>
-	</tr>
-	<tr>
-		<td>Specify time to keep proxied browsers active</td>
-	</tr>
-	<tr>
-		<td>Specify maximum proxy browsers to open</td>
-	</tr>
-	<tr>
-		<td>Browsers in normal or headless mode</td>
-	</tr>
-	<tr>
-		<td>Youtube mode - Auto click video player on load</td>
-	</tr>
-	<tr>
-		<td>Multiple, Single instance or Multi-Pool proxied browser threads</td>
-	</tr>
-	<tr>
-		<td>FreshProxies auto-update check</td>
-	</tr>
-</table>
+## Features
+- [x] "Grab Http/Https/Socks4/Socks5 proxies"
+- [x] "Specify number of proxies to save"
+- [x] "Filter proxies by country"
+- [x] "Filter proxies by anonymity"
+- [x] "Open proxied Firefox instances for proxies in file list"
+- [x] "Open proxied Firefox instances after grabbing proxy list"
+- [x] "Check against URL and remove dead proxies automatically (optional)"
+- [x] "Specify time to keep proxied browsers active"
+- [x] "Specify custom url for proxy browsers"
+- [x] "Specify maximum proxy browsers to open"
+- [x] "Browsers in normal or headless mode"
+- [x] "Youtube mode - Auto click video player on load"
+- [x] "Multiple, Single instance or Multi-Pool proxied browser threads"
+- [x] "Automatic script logging to text and pdf"
+- [x] "FreshProxies auto-update check"
 
-## Whats New [v1010]
+### Whats New [v1010]
 
 - [x] Add thread modes for proxy browsers
 - [x] More descriptive errors
