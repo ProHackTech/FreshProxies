@@ -9,23 +9,27 @@
 	Python script to grab HTTP, HTTPS, SOCKS4 and SOCKS5 proxies fast. Proxied Browsers.
 </p>
 
-
-| Features                                                           |
-|--------------------------------------------------------------------|
-| Grab Http/Https/Socks4/Socks5 proxies                              |
-| Specify number of proxies to save                                  |
-| Filter proxies by country                                          |
-| Filter proxies by anonymity                                        |
-| Open proxied Firefox instances for proxies in file list            |
-| Open proxied Firefox instances after grabbing proxy list           |
-| Check against URL and remove dead proxies automatically (optional) |
-| Specify time to keep proxied browsers active                       |
-| Specify custom url for proxy browsers                              |
-| Specify maximum proxy browsers to open                             |
-| Browsers in normal or headless mode                                |
-| Youtube mode - Auto click video player on load                     |
-| Multiple, Single instance or Multi-Pool proxied browser threads    |
-| FreshProxies auto-update check                                     |
+<table align="center">
+	<tr>
+		<th>Features</th>
+	</tr>
+	<tr>
+		<td>Grab Http/Https/Socks4/Socks5 proxies</td>
+		<td>Specify number of proxies to save</td>
+		<td>Filter proxies by country</td>
+		<td>Filter proxies by anonymity</td>
+		<td>Open proxied Firefox instances for proxies in file list</td>
+		<td>Open proxied Firefox instances after grabbing proxy list</td>
+		<td>Check against URL and remove dead proxies automatically</td>
+		<td>Specify time to keep proxied browsers active</td>
+		<td>Specify time to keep proxied browsers active</td>
+		<td>Specify maximum proxy browsers to open</td>
+		<td>Browsers in normal or headless mode</td>
+		<td>Youtube mode - Auto click video player on load</td>
+		<td>Multiple, Single instance or Multi-Pool proxied browser threads</td>
+		<td>FreshProxies auto-update check</td>
+	</tr>
+</table>
 
 ## Whats New [v1010]
 
