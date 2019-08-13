@@ -11,25 +11,23 @@
 
 ## Features
 
----
-Features:
-- [x] "Grab Http/Https/Socks4/Socks5 proxies"
-- [x] "Specify number of proxies to save"
-- [x] "Filter proxies by country"
-- [x] "Filter proxies by anonymity"
-- [x] "Open proxied Firefox instances for proxies in file list"
-- [x] "Open proxied Firefox instances after grabbing proxy list"
-- [x] "Check against URL and remove dead proxies automatically (optional)"
-- [x] "Specify time to keep proxied browsers active"
-- [x] "Specify custom url for proxy browsers"
-- [x] "Specify maximum proxy browsers to open"
-- [x] "Browsers in normal or headless mode"
-- [x] "Youtube mode - Auto click video player on load"
-- [x] "Multiple, Single instance or Multi-Pool proxied browser threads"
-- [x] "Automatic script logging to text and pdf"
-- [x] "FreshProxies auto-update check"
-Latest_Version: "1010"
----
+| Features                                                                   |
+|----------------------------------------------------------------------------|
+| - [x] "Grab Http/Https/Socks4/Socks5 proxies"                              |
+| - [x] "Specify number of proxies to save"                                  |
+| - [x] "Filter proxies by country"                                          |
+| - [x] "Filter proxies by anonymity"                                        |
+| - [x] "Open proxied Firefox instances for proxies in file list"            |
+| - [x] "Open proxied Firefox instances after grabbing proxy list"           |
+| - [x] "Check against URL and remove dead proxies automatically (optional)" |
+| - [x] "Specify time to keep proxied browsers active"                       |
+| - [x] "Specify custom url for proxy browsers"                              |
+| - [x] "Specify maximum proxy browsers to open"                             |
+| - [x] "Browsers in normal or headless mode"                                |
+| - [x] "Youtube mode - Auto click video player on load"                     |
+| - [x] "Multiple, Single instance or Multi-Pool proxied browser threads"    |
+| - [x] "Automatic script logging to text and pdf"                           |
+| - [x] "FreshProxies auto-update check"                                     |
 
 ## Whats New [v1010]
 
