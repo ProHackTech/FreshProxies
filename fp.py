@@ -1,5 +1,5 @@
 import os, threading, argparse, requests, time
-import urllib.request, urllib.error, socket
+import urllib.request, urllib.error, socket, shutil
 from prettytable import PrettyTable
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -11,9 +11,6 @@ from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.proxy import Proxy, ProxyType
 from core.colors import c_white, c_green, c_red, c_yellow, c_blue
 from core.config import *
-
-# store proxy information
-proxy_ips, proxy_ports = [], []
 
 # clear screen
 def ClrScrn():
@@ -49,44 +46,83 @@ def proxy_browser(proxy):
 		print(f"{c_green}[Proxy Used] >> {c_blue}{proxy}{c_white}")
 		print(f"{c_green}[Browser Mode] >> {c_blue}{arg_browsermode}{c_white}")
 		print(f"{c_green}[TimeSec] >> {c_blue}{arg_pb_timesec}{c_white}\n\n")
+		
 		driver.get(arg_proxyurl)
-
-		# if youtube view mode
-		if arg_youtubevideo:
-			delay_time = 5 # seconds
-			# if delay time is more than timesec for proxybrowser
-			if delay_time > arg_pb_timesec:
-				# increase proxybrowser timesec
-				arg_pb_timesec += 5
-			# wait for the web element to load
-			try:
-				player_elem = WebDriverWait(driver, delay_time).until(EC.presence_of_element_located((By.ID, 'movie_player')))
-				togglebtn_elem = WebDriverWait(driver, delay_time).until(EC.presence_of_element_located((By.ID, 'toggleButton')))
-				time.sleep(2)
-				# click player
-				webdriver.ActionChains(driver).move_to_element(player_elem).click(player_elem).perform()
-				try:
-					# click autoplay button to disable autoplay
-					webdriver.ActionChains(driver).move_to_element(togglebtn_elem).click(togglebtn_elem).perform()
-				except Exception:
-					pass
-			except TimeoutException:
-				print("Loading video control took too much time!")
-		# keeping the browser window open
-		time.sleep(arg_pb_timesec)
-		# close driver
-		driver.close()
-		driver.quit()
+		time.sleep(2) # seconds
+		# check if redirected to google captcha (for quitting abused proxies)
+		if not "google.com/sorry/" in driver.current_url:
+			# if youtube view mode
+			if arg_youtubevideo:
+				delay_time = 5 # seconds
+				# if delay time is more than timesec for proxybrowser
+				if delay_time > arg_pb_timesec:
+					# increase proxybrowser timesec
+					arg_pb_timesec += 5
+					# wait for the web element to load
+					try:
+						player_elem = WebDriverWait(driver, delay_time).until(EC.presence_of_element_located((By.ID, 'movie_player')))
+						togglebtn_elem = WebDriverWait(driver, delay_time).until(EC.presence_of_element_located((By.ID, 'toggleButton')))
+						time.sleep(2)
+						# click player
+						webdriver.ActionChains(driver).move_to_element(player_elem).click(player_elem).perform()
+						try:
+							# click autoplay button to disable autoplay
+							webdriver.ActionChains(driver).move_to_element(togglebtn_elem).click(togglebtn_elem).perform()
+						except Exception:
+							pass
+					except TimeoutException:
+						print("Loading video control took too much time!")
+		else:
+			print(f"{c_red}[Network Error] >> Abused Proxy: {proxy}{c_white}")
+			driver.close()
+			driver.quit()
+			if proxy not in abused_proxies:
+				abused_proxies.append(proxy)
 	except Exception as e:
 		print(f"{c_red}{e}{c_white}")
 		driver.close()
 		driver.quit()
+
+# Yield successive n-sized chunks from rippers list
+def multipool_chunks(rippers):
+	global arg_poolnumber
+	global arg_maxbrowsers
+
+	# if pool number is not less than or equal to 0
+	if not arg_poolnumber <= 0:
+		# if pool number is not more than or equal to max browsers
+		if not arg_poolnumber >= arg_maxbrowsers:
+			# yeild the chunks
+			for i in range(0, len(rippers), arg_poolnumber):
+				yield rippers[i:i + arg_poolnumber]
+		else:
+			# print error and exit the script
+			print(f"{c_red}[MultiPool Error] >> {c_yellow}(poolnumber){c_red} can not greater than{c_yellow} (maxbrowser number){c_white}")
+			exit()
+
+# chunk runner
+def browser_chunk_ripper(chunk_list):
+	# chunk_list will act like 'rippers' threads list as in multi option
+	for chunk_thread in chunk_list:
+		chunk_thread.start()
+	for chunk_thread in chunk_list:
+		try:
+			chunk_thread.join()
+			print(f"{c_green}[Thread] >> {c_yellow}Number:{c_blue}{chunk_thread}{c_white}")
+		except Exception as e:
+			print(f"{c_red}{e}{c_white}")
 
 # multiple browser threads
 # senders :: 0=default | 1=aftergrab
 def proxybrowser_ripper(sender):
 	global arg_filename
 	global arg_maxbrowsers
+	global arg_threadmode
+	global arg_poolnumber
+
+	# if thread mode is empty, set as multi
+	if arg_threadmode == '':
+		arg_threadmode = 'multi'
 
 	# if sender 0, proxies will be taken from saved file
 	if sender == 0:
@@ -104,16 +140,38 @@ def proxybrowser_ripper(sender):
 		trimmed_proxies = proxies[:arg_maxbrowsers]
 	# creating thread list for starting browser thread
 	rippers = [threading.Thread(target=proxy_browser, args=(proxy,), daemon=True) for proxy in trimmed_proxies]
-	# starting the threads
-	for ripper in rippers:
-		ripper.start()
-	# join the threads
-	for ripper in rippers:
-		try:
-			ripper.join()
-			print(f"{c_green}[Thread] >> {c_yellow}Number:{c_blue}{ripper}{c_white}")
-		except Exception as e:
-			print(f"{c_red}{e}{c_white}")
+	# thread mode
+	if arg_threadmode == 'multi':
+		print(f"{c_green} -- [Multi Mode] --{c_white}\n")
+		# starting threads
+		for ripper in rippers:
+			ripper.start()
+		# join all threads at once (multi)
+		for ripper in rippers:
+			try:
+				ripper.join()
+				print(f"{c_green}[Thread] >> {c_yellow}Number:{c_blue}{ripper}{c_white}")
+			except Exception as e:
+				print(f"{c_red}{e}{c_white}")
+	elif arg_threadmode == 'single':
+		print(f"{c_green} -- [Single Mode] --{c_white}\n")
+		# starting and joining the thread one by one (single)
+		for ripper in rippers:
+			try:
+				ripper.start()
+				ripper.join()
+				print(f"{c_green}[Thread Joined] >> {c_yellow}Number:{c_blue}{ripper}{c_white}")
+			except Exception as e:
+				print(f"{c_red}{e}{c_white}")
+	elif arg_threadmode == 'multipool':
+		print(f"{c_green} -- [Multi-Pool Mode] --{c_white}\n")
+		print(f"{c_green}[Pools/Chunks] >> {c_yellow}of Number: {c_blue}{arg_poolnumber}{c_white}")
+		# yield chunks for threads
+		chunks_list = multipool_chunks(rippers)
+		# for each list of chunks
+		for each_chunk in chunks_list:
+			browser_chunk_ripper(each_chunk)
+			time.sleep(5)
 
 # Function: Checking proxy response
 def proxy_response_check(prox):
@@ -170,22 +228,20 @@ def cleaner_(page_data):
 	global arg_filename
 	global arg_limit
 	global arg_nocheck
+
 	tempfile = "temp.txt"
 
 	# pretty table
 	xTable = PrettyTable()
 	xTable.field_names = ["Number", "IP Address", "Port"]
-
 	print(f"{c_green}[Cleaning Proxy List]{c_white}")
 	# dump to tempfile
 	file = open(tempfile,"w")
 	file.write(page_data)
 	file.close()
-	
 	# read tempfile
 	with open(tempfile) as f:
 		content = f.readlines()
-	
 	# remove tempfile
 	try:
 		os.remove(tempfile)
@@ -195,29 +251,24 @@ def cleaner_(page_data):
 			os.unlink(tempfile)
 		except Exception as ee:
 			pass
-	
 	# clean \r\n
 	content = [x.rstrip() for x in content]
 	# clean empty index
 	content = [item for item in content if item != '']
-	
 	# add to global list
 	for item in content:
 		tempprox = item.split(":")
 		proxy_ips.append(tempprox[0])
 		proxy_ports.append(tempprox[1])
-	
 	# start auto check
 	if not arg_nocheck:
 		print(f"{c_white}This will take some time.. Dead proxies will automatically be removed. Relax.")
 		check_dead_proxies()
-	
 	# save clean list
 	if arg_filename == '':
 		arg_filename = 'proxies.txt'
 	f = open(arg_filename,"w")
 	num_saved = 0
-
 	# join and write to file
 	for x in range(0, arg_limit):
 		if not x > (len(proxy_ips)-1):
@@ -227,8 +278,6 @@ def cleaner_(page_data):
 			pretty_ip = f"{c_blue}{proxy_ips[x]}{c_white}"
 			pretty_port = f"{c_blue}{proxy_ports[x]}{c_white}"
 			xTable.add_row([f'{c_yellow}{x}{c_red}', f"{c_blue}{proxy_ips[x]}{c_red}", f"{c_blue}{proxy_ports[x]}{c_red}"])
-			#print(xTable)
-			#print(f"{c_green}[Proxy:{x}] {c_yellow}>> {c_blue}{proxy_ips[x]}{c_yellow}:{c_blue}{proxy_ports[x]}{c_white}")
 	f.close()
 	print(xTable)
 	print(f"{c_green}[Total Proxies] {c_yellow}>>{c_white} {num_saved}")
@@ -302,7 +351,6 @@ def grabber():
 		# set to default http
 		arg_type = "http"
 		grabber()
-
 	duration = time.time() - start
 	print(f"{c_green}[Time Taken] {c_yellow}>> {c_blue}{duration}{c_white}\n\n")
 
@@ -341,6 +389,21 @@ def update_check():
 		version_diff = (version_me - content)
 		print(f"{c_green}[Running Ahead] {c_yellow}>> {c_green}{version_diff} {c_white}versions\n\n")
 
+# updater update
+def updater_update():
+	filename = "update.py"
+	filepath = f"updater/{filename}"
+	if os.path.isfile(filename):
+		os.remove(filename)
+	try:
+		urllib.urlretrieve ("https://github.com/ProHackTech/FreshProxies/blob/master/updater/update.py", filename)
+		if os.path.isfile(filepath):
+			os.remove(filepath)
+		shutil.move(filename, filepath)
+	except Exception as e:
+		print(f"{c_red}[Error] >> Unable to download {c_blue}update.py{c_red}\n\n{e}\n\nEXITING!{c_white}")
+		exit()
+
 def banner():
 	ClrScrn()
 	print(f'''{c_green}
@@ -353,6 +416,7 @@ def banner():
 		''')
 
 	print(f"\n[Version Check]...")
+	updater_update()
 	update_check()
 
 def pretty_help():
@@ -370,6 +434,8 @@ def pretty_help():
 	hTable.add_row([f'{c_green}-ts{c_red}', f'{c_green}--timesec{c_red}', f'{c_white}Time seconds to keep browsers alive'])
 	hTable.add_row([f'{c_green}-mb{c_red}', f'{c_green}--maxbrowsers{c_red}', f'{c_white}Maximum number of browsers to open'])
 	hTable.add_row([f'{c_green}-bm{c_red}', f'{c_green}--browsermode{c_red}', f'{c_white}"normal" or "headless" browser window'])
+	hTable.add_row([f'{c_green}-tm{c_red}', f'{c_green}--threadmode{c_red}', f'{c_white}"multi" or "single" or "multipool"'])
+	hTable.add_row([f'{c_green}-pn{c_red}', f'{c_green}--poolnumber{c_red}', f'{c_white}Enter a number of browsers to pool for multipool option'])
 	hTable.add_row([f'{c_green}-ytv{c_red}', f'{c_green}--ytvideo{c_red}', f'{c_white}Play YouTube video (for view botting)'])
 	print(hTable)
 
@@ -387,6 +453,8 @@ def init():
 	global arg_youtubevideo
 	global arg_nocheck
 	global arg_browsermode
+	global arg_threadmode
+	global arg_poolnumber
 
 	banner()
 	parser = argparse.ArgumentParser(description="FreshProxies", add_help=False)
@@ -408,6 +476,8 @@ def init():
 	parser.add_argument("-ts", "--timesec", type=int)
 	parser.add_argument("-mb", "--maxbrowsers", type=int)
 	parser.add_argument("-bm", "--browsermode", type=str)
+	parser.add_argument("-tm", "--threadmode", type=str)
+	parser.add_argument("-pn", "--poolnumber", type=int)
 	parser.add_argument("-ytv", "--ytvideo", action="store_true")
 
 	args = parser.parse_args()
@@ -438,6 +508,10 @@ def init():
 		arg_nocheck = True
 	if args.browsermode:
 		arg_browsermode = args.browsermode
+	if args.threadmode:
+		arg_threadmode = args.threadmode
+	if args.poolnumber:
+		arg_poolnumber = args.poolnumber
 
 	if args.type:
 		arg_type = args.type

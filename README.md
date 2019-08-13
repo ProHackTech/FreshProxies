@@ -5,7 +5,36 @@
 	FreshProxies
 </h1>
 
-Python script to grab HTTP, HTTPS, SOCKS4 and SOCKS5 proxies fast. Open multiple proxied browsers. Get unique views.
+<h1>
+Python script to grab HTTP, HTTPS, SOCKS4 and SOCKS5 proxies fast. Proxied Browsers.
+
+## Features
+
+---
+Features:
+- [x] "Grab Http/Https/Socks4/Socks5 proxies"
+- [x] "Specify number of proxies to save"
+- [x] "Filter proxies by country"
+- [x] "Filter proxies by anonymity"
+- [x] "Open proxied Firefox instances for proxies in file list"
+- [x] "Open proxied Firefox instances after grabbing proxy list"
+- [x] "Check against URL and remove dead proxies automatically (optional)"
+- [x] "Specify time to keep proxied browsers active"
+- [x] "Specify custom url for proxy browsers"
+- [x] "Specify maximum proxy browsers to open"
+- [x] "Browsers in normal or headless mode"
+- [x] "Youtube mode - Auto click video player on load"
+- [x] "Multiple, Single instance or Multi-Pool proxied browser threads"
+- [x] "Automatic script logging to text and pdf"
+- [x] "FreshProxies auto-update check"
+Latest_Version: "1010"
+---
+
+## Whats New [v1010]
+
+- [x] Add thread modes for proxy browsers
+- [x] More descriptive errors
+- [x] Automatic updater update
 
 ## Instructions
 
@@ -27,26 +56,17 @@ or
 
 You will need Firefox installed on the system. Gecko driver executable file is provieded for Windows users. Linux users can enjoy without any executables, as long as Firefox is installed.
 
-## Features
 
-- [x] Grab Http/Https/Socks4/Socks5 proxies
-- [x] Specify number of proxies to save
-- [x] Filter proxies by country
-- [x] Filter proxies by anonymity
-- [x] Open proxied Firefox instances for proxies in file list
-- [x] Open proxied Firefox instances after grabbing proxy list
-- [x] Check against URL and remove dead proxies automatically (optional)
-- [x] Specify time to keep proxied browsers active
-- [x] Specify custom url for proxy browsers
-- [x] Specify maximum proxy browsers to open
-- [x] Browsers in normal or headless mode
-- [x] Youtube mode - auto play videos once player element is loaded (for view bot)
-- [x] FreshProxies auto-update-check
+## To-Do
 
-### Whats New [v1009]
-
-- [x] Add browser mode 'normal' or 'headless'
-- [x] Add verbosity to proxy browser threads
+- [x] Add argument configurations to core folder
+- [x] Custom help menu
+- [x] Allow single and pool of browser to run at a time
+- [ ] Add support for other proxy sites
+- [ ] Automatic logging
+- [x] Auto updater update
+- [ ] Auto backup and update proxy list
+- [ ] Convert script log to PDF format
 
 *Note:* For some weird reason, proxy browser after grab is making the proxy servers refuse connections :< But regular command without grab works fine..
 
@@ -112,6 +132,38 @@ The following command will perform these actions:
 
 > python fp.py -t http -l 50 --filename your_filename_without_spaces.txt -nocheck
 
+## Example Command (Thread Modes)
+
+There are 3 modes available for proxy browser threading.
+
+<b>multi</b> mode is the default mode and starts all the browser threads together. This mode fine for systems with really good specs and when less browsers are opened.
+
+<b>multipool</b> mode is my favorite mode. It divides the threads into pool of threads safely. This allows us to run a a lot of proxied browsers without having to worry about hardware specs. Makes botting efficient for low spec systems.
+
+<b>single</b> mode runs one browser thread at a time. This is for potatoe systems with very low specs or ones that don't want multiple threads running together. This is safer because it only starts new thread once the previous browser thread exits.
+
+### multi mode command
+
+No need for extra command because this is default. But anyway:
+
+> python fp.py -pb -pu https://yourwebsite.com/ -mb 300 -tm multi -ts 120
+
+### multipool mode command
+
+Following command will do this:
+
+- Safely divide 300 proxy browser threads into pools of 10 browser threads
+- Time to keep each thread open after site load will be 120 seconds
+
+> python fp.py -pb -pu https://yourwebsite.com/ -mb 300 -tm multipool -pn 10 -ts 120
+
+This mode is great xD
+
+### single mode command
+
+- Will open one browser at a time. Next browser will open only when the previous thread exits
+
+> python fp.py -pb -pu https://yourwebsite.com/ -mb 300 -tm single -ts 120
 
 ## Example Command (proxy browser after grab)
 
