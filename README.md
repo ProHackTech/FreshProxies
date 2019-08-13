@@ -15,18 +15,41 @@
 	</tr>
 	<tr>
 		<td>Grab Http/Https/Socks4/Socks5 proxies</td>
+	</tr>
+	<tr>
 		<td>Specify number of proxies to save</td>
+	</tr>
+	<tr>
 		<td>Filter proxies by country</td>
+	</tr>
+	<tr>
 		<td>Filter proxies by anonymity</td>
+	</tr>
+	<tr>
 		<td>Open proxied Firefox instances for proxies in file list</td>
+	</tr>
+	<tr>
 		<td>Open proxied Firefox instances after grabbing proxy list</td>
-		<td>Check against URL and remove dead proxies automatically</td>
+	</tr>
+	<tr>
+		<td>Check proxies against URL and remove dead proxies automatically</td>
+	</tr>
+	<tr>
 		<td>Specify time to keep proxied browsers active</td>
-		<td>Specify time to keep proxied browsers active</td>
+	</tr>
+	<tr>
 		<td>Specify maximum proxy browsers to open</td>
+	</tr>
+	<tr>
 		<td>Browsers in normal or headless mode</td>
+	</tr>
+	<tr>
 		<td>Youtube mode - Auto click video player on load</td>
+	</tr>
+	<tr>
 		<td>Multiple, Single instance or Multi-Pool proxied browser threads</td>
+	</tr>
+	<tr>
 		<td>FreshProxies auto-update check</td>
 	</tr>
 </table>
