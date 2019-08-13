@@ -414,13 +414,12 @@ def banner():
 | |  | |  ( (/ /|___ | | | | |   | |  | |_| ) X (| ( (/ /|___ |
 |_|  |_|   \____|___/|_| |_|_|   |_|   \___(_/ \_)_|\____|___/ {c_white}
 		''')
-
 	print(f"\n[Version Check]...")
-	updater_update()
 	update_check()
+	updater_update()
 
 def pretty_help():
-	banner()
+	ClrScrn()
 	hTable = PrettyTable()
 	hTable.field_names = [f"{c_yellow}Argument Less", "Argument Full", f"Description{c_white}"]
 	hTable.add_row([f'{c_green}-t{c_red}', f'{c_green}--type{c_red}', f'{c_white}Enter Proxy Type [HTTP/HTTPS/SOCKS4/SOCKS5/ALL]'])
