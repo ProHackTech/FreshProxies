@@ -396,7 +396,7 @@ def updater_update():
 	if os.path.isfile(filename):
 		os.remove(filename)
 	try:
-		urllib.request.urlretrieve("https://github.com/ProHackTech/FreshProxies/blob/master/updater/update.py", filename)
+		urllib.request.urlretrieve("https://raw.githubusercontent.com/ProHackTech/FreshProxies/master/updater/update.py", filename)
 		if os.path.isfile(filepath):
 			os.remove(filepath)
 		shutil.move(filename, filepath)
