@@ -86,22 +86,24 @@ Can be accessed using '-h' or '--help'
 
 ```
 
-+---------------+----------------+----------------------------------------------------+
-| Argument Less | Argument Full  |                    Description                     |
-+---------------+----------------+----------------------------------------------------+
-|       -t      |     --type     |  Enter Proxy Type [HTTP/HTTPS/SOCKS4/SOCKS5/ALL]   |
-|       -a      |  --anonymity   | Enter Anonymity Type [transparent/anonymous/elite] |
-|       -c      |   --country    |      Enter Country ISO Code [US/RU/IN etc..]       |
-|       -f      |   --filename   |          Enter Filename [EX: proxies.txt]          |
-|       -l      |    --limit     |             Enter max proxies to save              |
-|    -nocheck   |   --nocheck    |            Donot check for dead proxies            |
-|      -pb      | --proxybrowser |             Opens browser for proxies              |
-|      -pu      |   --proxyurl   |      Enter your custom url for proxy browser       |
-|      -ts      |   --timesec    |        Time seconds to keep browsers alive         |
-|      -mb      | --maxbrowsers  |         Maximum number of browsers to open         |
-|      -bm      | --browsermode  |       "normal" or "headless" browser window        |
-|      -ytv     |   --ytvideo    |       Play YouTube video (for view botting)        |
-+---------------+----------------+----------------------------------------------------+
++---------------+----------------+---------------------------------------------------------+
+| Argument Less | Argument Full  |                       Description                       |
++---------------+----------------+---------------------------------------------------------+
+|       -t      |     --type     |     Enter Proxy Type [HTTP/HTTPS/SOCKS4/SOCKS5/ALL]     |
+|       -a      |  --anonymity   |    Enter Anonymity Type [transparent/anonymous/elite]   |
+|       -c      |   --country    |         Enter Country ISO Code [US/RU/IN etc..]         |
+|       -f      |   --filename   |             Enter Filename [EX: proxies.txt]            |
+|       -l      |    --limit     |                Enter max proxies to save                |
+|    -nocheck   |   --nocheck    |               Donot check for dead proxies              |
+|      -pb      | --proxybrowser |                Opens browser for proxies                |
+|      -pu      |   --proxyurl   |         Enter your custom url for proxy browser         |
+|      -ts      |   --timesec    |           Time seconds to keep browsers alive           |
+|      -mb      | --maxbrowsers  |            Maximum number of browsers to open           |
+|      -bm      | --browsermode  |          "normal" or "headless" browser window          |
+|      -tm      |  --threadmode  |            "multi" or "single" or "multipool"           |
+|      -pn      |  --poolnumber  | Enter a number of browsers to pool for multipool option |
+|      -ytv     |   --ytvideo    |          Play YouTube video (for view botting)          |
++---------------+----------------+---------------------------------------------------------+
 
 ```
 
