@@ -5,11 +5,8 @@
 	FreshProxies
 </h1>
 
-<h3 align="center">
-	Python script to grab HTTP, HTTPS, SOCKS4 and SOCKS5 proxies fast. Proxied Browsers.
-</h3>
-
-## Features
+Python script to grab HTTP, HTTPS, SOCKS4 and SOCKS5 proxies fast. Proxied Browsers.
+<hr><hr>
 
 | Features                                                           |
 |--------------------------------------------------------------------|
@@ -26,7 +23,6 @@
 | Browsers in normal or headless mode                                |
 | Youtube mode - Auto click video player on load                     |
 | Multiple, Single instance or Multi-Pool proxied browser threads    |
-| Automatic script logging to text and pdf                           |
 | FreshProxies auto-update check                                     |
 
 ## Whats New [v1010]
