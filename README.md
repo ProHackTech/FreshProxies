@@ -1,3 +1,4 @@
+
 <h1 align="center">
 	<br>
 	<img src="https://raw.githubusercontent.com/ProHackTech/FreshProxies/master/git_assets/logo.png" alt="FreshProxy Logo">
@@ -180,6 +181,12 @@ The following command will perform these actions:
 
 
 **More arguments can be found using --help menu**
+
+## Known Issue
+
+- Thread safety is a really annoying issue in every program that uses multithreading library in python. Currently there is no way to ensure complete thread safety in selenium webdriver with multithreading as explained here: https://stackoverflow.com/questions/55198005/multithreading-with-selenium-using-python-and-telpot/55201772#55201772 . I have posted stackoverflow question regarding the same here: https://stackoverflow.com/questions/57491249/selenium-mutithread-deamons-exit-but-still-run-geckodriver?noredirect=1#comment101464297_57491249
+
+Unfortunately this cannot be fixed because there is no good fix for this, other than using locks, which I tried and to no real improvement. Other option is to use full process for each browser session with multiprocessing instead of thread. Will look into Asyncio as well.
 
 ## License
 
